@@ -1,0 +1,28 @@
+// This is your datasource
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model College {
+  id          Int      @id @default(autoincrement())
+  institute   String
+  program     String
+  quota       String   // e.g., AI, HS, OS
+  category    String   // e.g., OPEN, OBC-NCL
+  gender      String   // e.g., Gender-Neutral
+  openingRank Int
+  closingRank Int
+  year        Int
+  round       Int
+  createdAt   DateTime @default(now())
+
+  // PERFORMANCE OPTIMIZATION:
+  // We create a composite index. This allows the database to instantly 
+  // slice data by Category, Quota, and Rank without scanning the whole table.
+  @@index([category, quota, closingRank])
+}
