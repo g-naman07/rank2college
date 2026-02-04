@@ -26,3 +26,14 @@ model College {
   // slice data by Category, Quota, and Rank without scanning the whole table.
   @@index([category, quota, closingRank])
 }
+
+model MarksVsRank {
+  id          Int      @id @default(autoincrement())
+  minMarks    Int      // e.g. 180
+  percentile  Float    // e.g. 98.5
+  year        Int      // e.g. 2025
+  description String?  // e.g. "Moderate Difficulty Prediction"
+  createdAt   DateTime @default(now())
+  
+  @@index([year, minMarks]) // Fast lookup
+}

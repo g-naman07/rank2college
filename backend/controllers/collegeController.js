@@ -1,57 +1,95 @@
 const prisma = require('../config/db');
 
+// --- CONSTANTS ---
+const TOTAL_CANDIDATES = 1400000; // ~14 Lakhs Total
+
+// Approximate count of students in each category
+const CATEGORY_STATS = {
+    'OPEN':    TOTAL_CANDIDATES,       
+    'OBC-NCL': TOTAL_CANDIDATES * 0.35, 
+    'EWS':     TOTAL_CANDIDATES * 0.12, 
+    'SC':      TOTAL_CANDIDATES * 0.10, 
+    'ST':      TOTAL_CANDIDATES * 0.04  
+};
+
 exports.predictColleges = async (req, res) => {
     try {
-        const { rank, category, quota, gender } = req.body;
+        let { rank, marks, category, quota, gender } = req.body;
+        
+        // NEW: Variable to store the percentile we find
+        let predictedPercentile = null; 
 
-        // 1. Basic Validation
+        // --- DYNAMIC RANK CALCULATION ---
+        if (!rank && marks) {
+            console.log(`🧮 Calculating Rank for Marks: ${marks} | Category: ${category}`);
+
+            // 1. Fetch Percentile
+            const trendRule = await prisma.marksVsRank.findFirst({
+                where: {
+                    year: 2025,
+                    minMarks: { lte: parseInt(marks) }
+                },
+                orderBy: { minMarks: 'desc' }
+            });
+
+            if (trendRule) {
+                // CAPTURE THE PERCENTILE
+                predictedPercentile = trendRule.percentile;
+
+                // 2. Determine Pool Size
+                const categoryPool = CATEGORY_STATS[category] || TOTAL_CANDIDATES;
+                
+                // 3. Formula
+                rank = Math.floor(((100 - trendRule.percentile) * categoryPool) / 100);
+                
+                if (rank <= 0) rank = 1;
+
+                console.log(`📊 Percentile: ${predictedPercentile}% | Pool: ${categoryPool}`);
+                console.log(`🎯 Estimated Rank: ${rank}`);
+            } else {
+                console.warn("⚠️ No trend found. Defaulting.");
+                rank = 600000; 
+            }
+        }
+
+        // --- VALIDATION ---
         if (!rank || !category || !quota) {
             return res.status(400).json({ 
                 success: false, 
-                message: "Please provide Rank, Category, and Quota." 
+                message: "Please provide either Rank or Marks, plus Category and Quota." 
             });
         }
 
-        console.log(`🔍 Search: Rank ${rank} | ${category} | ${quota} | ${gender || 'All'}`);
+        console.log(`🔍 Searching: ${category} Rank ${rank}`);
 
-        // 2. Query Logic
+        // --- DATABASE QUERY ---
         const colleges = await prisma.college.findMany({
             where: {
-                // Case-insensitive matching (so "open" matches "OPEN")
                 category: { equals: category, mode: 'insensitive' },
                 quota: { equals: quota, mode: 'insensitive' },
-                
-                // Optional: If gender is sent, filter by it. 
-                // (Note: In real JOSAA, Females can take Gender-Neutral seats too, 
-                // but for now let's just match strictly to keep it simple)
                 ...(gender && { gender: { equals: gender, mode: 'insensitive' } }),
 
-                // THE GOLDEN RULE: 
-                // You can get into a college if its Closing Rank is GREATER (worse) than yours.
-                // e.g. Your Rank: 5000. College Closes at: 6000. -> You get in.
                 closingRank: {
                     gte: parseInt(rank)
                 }
             },
             orderBy: {
-                closingRank: 'asc' // Show the "best" colleges (closest to your rank) first
+                closingRank: 'asc'
             },
-            take: 50 // Limit to top 50 results to save bandwidth
+            take: 50
         });
 
-        // 3. Response
+        // --- RESPONSE (Now with Percentile!) ---
         res.status(200).json({
             success: true,
+            predictedRank: marks ? rank : null,
+            predictedPercentile: predictedPercentile, // <--- NEW FIELD
             count: colleges.length,
             data: colleges
         });
 
     } catch (error) {
         console.error("❌ API Error:", error);
-        res.status(500).json({ 
-            success: false, 
-            message: "Server Error", 
-            error: error.message 
-        });
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 };
