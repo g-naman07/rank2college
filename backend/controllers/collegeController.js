@@ -75,8 +75,7 @@ exports.predictColleges = async (req, res) => {
             },
             orderBy: {
                 closingRank: 'asc'
-            },
-            take: 50
+            }
         });
 
         // --- RESPONSE (Now with Percentile!) ---

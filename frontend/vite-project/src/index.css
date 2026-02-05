@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;700;800&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body.dark-theme {
+  --bg-primary: radial-gradient(
+      circle at top,
+      rgba(30, 42, 74, 0.4) 0%,
+      rgba(7, 7, 12, 0.95) 50%
+    ),
+    #05070d;
+  --text-primary: #f5f7ff;
+  --text-secondary: rgba(235, 237, 245, 0.75);
+  --text-muted: rgba(235, 237, 245, 0.6);
+  --accent: #36ffb2;
+  --panel-bg: rgba(9, 9, 14, 0.8);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(18, 18, 24, 0.95);
+  --input-border: rgba(255, 255, 255, 0.12);
+  --input-focus-border: rgba(20, 229, 255, 0.7);
+  --input-focus-shadow: rgba(20, 229, 255, 0.15);
+  --hero-bg: radial-gradient(140% 140% at 0% 0%, rgba(20, 205, 240, 0.18), transparent 55%), linear-gradient(145deg, rgba(20, 20, 28, 0.95), rgba(12, 12, 18, 0.95));
+  --stat-bg: rgba(10, 10, 16, 0.7);
+}
+
+body.light-theme {
+  --bg-primary: #f0f2f5;
+  --text-primary: #1a202c;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --accent: #2f855a;
+  --panel-bg: #ffffff;
+  --panel-border: #e2e8f0;
+  --input-bg: #ffffff;
+  --input-border: #cbd5e0;
+  --input-focus-border: #4299e1;
+  --input-focus-shadow: rgba(66, 153, 225, 0.2);
+  --hero-bg: linear-gradient(145deg, #e2e8f0, #f7fafc);
+  --stat-bg: #edf2f7;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Syne', system-ui, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font-family: inherit;
+}
+
+#root {
+  isolation: isolate;
+}
