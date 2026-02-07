@@ -4,31 +4,45 @@ import { GraduationCap, ArrowRight } from 'lucide-react';
 
 export default function Navbar() {
   return (
-    <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-      <nav className="glass-card rounded-full px-6 py-3 flex items-center justify-between w-full max-w-5xl shadow-xl shadow-slate-200/50">
+    // Removed 'px-4' from here to allow full edge-to-edge control
+    <div className="fixed top-6 left-0 right-0 z-50 w-full pointer-events-none">
+      
+      {/* 1. Removed 'max-w-7xl mx-auto' (which was constraining the width).
+         2. Added 'px-6 md:px-12' to push items to the edges but keep them safe.
+      */}
+      <div className="flex justify-between items-center w-full px-6 md:px-12 pointer-events-auto">
         
-        {/* Logo Area */}
-        <Link to="/" className="flex items-center gap-2 group">
-          <div className="bg-indigo-600 p-2 rounded-full text-white transform group-hover:rotate-12 transition-all duration-300 shadow-lg shadow-indigo-600/20">
+        {/* 1. LEFT PILL: LOGO */}
+        <Link 
+          to="/" 
+          className="bg-slate-900 text-white rounded-full p-1.5 pr-6 flex items-center gap-3 shadow-xl hover:scale-105 transition-transform"
+        >
+          <div className="bg-indigo-500 rounded-full p-2 text-white">
             <GraduationCap size={20} />
           </div>
-          <span className="text-lg font-bold tracking-tight text-slate-800 group-hover:text-indigo-600 transition-colors">
-            Rank2College
-          </span>
+          <span className="font-bold tracking-wide text-sm hidden sm:block">Rank2College</span>
         </Link>
 
-        {/* Desktop Links - Dark Text for Light Mode */}
-        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-          <Link to="/" className="hover:text-indigo-600 transition-colors">Home</Link>
-          <a href="#features" className="hover:text-indigo-600 transition-colors">Features</a>
-          <Link 
-            to="/predict" 
-            className="bg-indigo-600 text-white px-5 py-2 rounded-full hover:bg-indigo-700 font-bold transition-all flex items-center gap-2 shadow-lg shadow-indigo-200"
-          >
-            Predict Now <ArrowRight size={14} />
-          </Link>
+        {/* 2. CENTER PILL: LINKS */}
+        {/* Absolute centering trick to ensure it stays dead center even if left/right widths differ */}
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
+          <nav className="bg-white/80 backdrop-blur-md border border-slate-200/60 px-8 py-3.5 rounded-full shadow-2xl shadow-slate-200/50 flex gap-8 text-xs font-extrabold tracking-widest text-slate-500 uppercase">
+            <Link to="/" className="hover:text-indigo-600 transition-colors">Home</Link>
+            <a href="#features" className="hover:text-indigo-600 transition-colors">Features</a>
+            <a href="#about" className="hover:text-indigo-600 transition-colors">About Us</a>
+            <a href="#faq" className="hover:text-indigo-600 transition-colors">FAQ</a>
+          </nav>
         </div>
-      </nav>
+
+        {/* 3. RIGHT PILL: CTA */}
+        <Link 
+          to="/predict" 
+          className="bg-slate-900 text-white px-6 py-3.5 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-indigo-900 transition-all shadow-xl hover:scale-105 flex items-center gap-2"
+        >
+          Predict Now <ArrowRight size={14} />
+        </Link>
+
+      </div>
     </div>
   );
 }
