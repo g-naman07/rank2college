@@ -133,6 +133,42 @@ function calculateRankFromPercentile(percentile) {
     }
     return 1;
 }
+function getRankBracketFromPercentile(percentile) {
+    const p = parseFloat(percentile);
+    if (isNaN(p)) return null;
+
+    // If above max
+    if (p >= PERCENTILE_DATA[0].percentile) {
+        return {
+            minRank: 1,
+            maxRank: PERCENTILE_DATA[0].rank
+        };
+    }
+
+    // If below min
+    const last = PERCENTILE_DATA[PERCENTILE_DATA.length - 1];
+    if (p <= last.percentile) {
+        return {
+            minRank: last.rank,
+            maxRank: Math.round(last.rank * 1.05) // small buffer
+        };
+    }
+
+    // Find bracket
+    for (let i = 0; i < PERCENTILE_DATA.length - 1; i++) {
+        const upper = PERCENTILE_DATA[i];
+        const lower = PERCENTILE_DATA[i + 1];
+
+        if (p <= upper.percentile && p >= lower.percentile) {
+            return {
+                minRank: Math.min(upper.rank, lower.rank),
+                maxRank: Math.max(upper.rank, lower.rank)
+            };
+        }
+    }
+
+    return null;
+}
 
 exports.predictColleges = async (req, res) => {
     try {
@@ -173,6 +209,15 @@ exports.predictColleges = async (req, res) => {
                 rank = 800000; // Default fallback
             }
         }
+        let expectedRankRange = null;
+
+if (predictedPercentile) {
+    const bracket = getRankBracketFromPercentile(predictedPercentile);
+    if (bracket) {
+        expectedRankRange = `${bracket.minRank} – ${bracket.maxRank}`;
+    }
+}
+
 
         // --- 3. FLEXIBLE VALIDATION (Debug Mode) ---
         // We allow missing category/quota so you can see ALL data in Postman
@@ -215,6 +260,7 @@ exports.predictColleges = async (req, res) => {
             success: true,
             predictedRank: marks ? rank : null,
             predictedPercentile: predictedPercentile,
+             expectedRankRange,
             count: colleges.length,
             data: colleges
         });
@@ -240,10 +286,16 @@ exports.percentileToRank = async (req, res) => {
         let rank = Math.floor(baseRank * multiplier);
         if (rank <= 0) rank = 1;
 
-        res.status(200).json({
-            success: true,
-            predictedRank: rank
-        });
+        const bracket = getRankBracketFromPercentile(percentile);
+
+res.status(200).json({
+  success: true,
+  predictedRank: rank,
+  expectedRankRange: bracket
+    ? `${Math.floor(bracket.minRank * multiplier)} – ${Math.floor(bracket.maxRank * multiplier)}`
+    : null
+});
+
 
     } catch (error) {
         console.error("❌ API Error:", error);

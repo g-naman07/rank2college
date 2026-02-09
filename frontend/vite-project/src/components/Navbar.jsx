@@ -6,15 +6,15 @@ export default function Navbar() {
   return (
     // Removed 'px-4' from here to allow full edge-to-edge control
     <div className="fixed top-6 left-0 right-0 z-50 w-full pointer-events-none">
-      
+
       {/* 1. Removed 'max-w-7xl mx-auto' (which was constraining the width).
          2. Added 'px-6 md:px-12' to push items to the edges but keep them safe.
       */}
       <div className="flex justify-between items-center w-full px-6 md:px-12 pointer-events-auto">
-        
+
         {/* 1. LEFT PILL: LOGO */}
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="bg-slate-900 text-white rounded-full p-1.5 pr-6 flex items-center gap-3 shadow-xl hover:scale-105 transition-transform"
         >
           <div className="bg-indigo-500 rounded-full p-2 text-white">
@@ -35,8 +35,8 @@ export default function Navbar() {
         </div>
 
         {/* 3. RIGHT PILL: CTA */}
-        <Link 
-          to="/predict" 
+        <Link
+          to="/josaa/predict"
           className="bg-slate-900 text-white px-6 py-3.5 rounded-full text-xs font-bold tracking-widest uppercase hover:bg-indigo-900 transition-all shadow-xl hover:scale-105 flex items-center gap-2"
         >
           Predict Now <ArrowRight size={14} />

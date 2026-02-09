@@ -21,7 +21,7 @@ const Header = () => {
       </Link>
       <div className="topbar__links">
         <Link to="/">Home</Link>
-        <Link to="/college-predictor">College Predictor</Link>
+        <Link to="/josaaa/predictor">College Predictor</Link>
         <button onClick={toggleTheme} className="theme-toggle">
           {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
         </button>

@@ -63,7 +63,7 @@ export default function Home() {
               </p>
               
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                <Link to="/predict" className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 hover:-translate-y-1">
+                <Link to="/josaa/predict" className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 hover:-translate-y-1">
                   Start Prediction <ArrowRight size={20} />
                 </Link>
                 <button className="bg-white text-slate-700 px-8 py-4 rounded-full font-bold hover:bg-slate-50 transition-all border border-slate-200 shadow-sm">
@@ -108,7 +108,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <Link to="/predict" className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl text-center transition-all shadow-lg shadow-indigo-200 relative z-10">
+                <Link to="/josaa/predict" className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl text-center transition-all shadow-lg shadow-indigo-200 relative z-10">
                   Get Detailed Analysis
                 </Link>
               </div>

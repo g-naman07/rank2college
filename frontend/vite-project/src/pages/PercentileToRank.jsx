@@ -40,7 +40,7 @@ const PercentileToRank = () => {
     return (
         <div className="container mx-auto p-4 max-w-2xl">
             <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Percentile to Rank Predictor</h1>
-            
+
             <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
@@ -108,6 +108,15 @@ const PercentileToRank = () => {
                     </div>
                     <div className="mt-4 pt-4 border-t border-green-200">
                         <p className="text-center text-gray-600">Predicted Rank</p>
+                        {result.expectedRankRange && (
+                            <div className="mt-3 text-center">
+                                <p className="text-sm text-gray-500">Expected Rank Range</p>
+                                <p className="text-lg font-semibold text-gray-800">
+                                    {result.expectedRankRange}
+                                </p>
+                            </div>
+                        )}
+
                         <p className="text-center text-4xl font-bold text-blue-600">{result.predictedRank.toLocaleString()}</p>
                     </div>
                 </div>

@@ -11,7 +11,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/predict" element={<Predictor />} />
+        <Route path="/josaa/predict" element={<Predictor />} />
         <Route path="/percentile2rank" element={<PercentileToRank />} />
       </Routes>
     </div>
