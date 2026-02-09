@@ -236,45 +236,49 @@ exports.predictColleges = async (req, res) => {
 
         // --- 4. PREPARE FILTERS ---
         // The spread operator `...` only adds the filter if the variable is NOT undefined.
-        let whereClause = {
-            ...(category && { category: { equals: category, mode: 'insensitive' } }),
-            ...(quota && { quota: { equals: quota, mode: 'insensitive' } }),
-            ...(gender && { gender: { equals: gender, mode: 'insensitive' } }),
-            closingRank: { gte: parseInt(rank) }
-        };
+       const whereClause = {
+  AND: [
+    ...(category ? [{ category: { equals: category, mode: 'insensitive' } }] : []),
+    ...(quota ? [{ quota: { equals: quota, mode: 'insensitive' } }] : []),
+    ...(gender ? [{ gender: { equals: gender, mode: 'insensitive' } }] : []),
+    {
+      closingRank: {
+        gte: parseInt(rank),
+        lte: parseInt(rank) + 50000,
+      },
+    },
+  ],
+};
 
-        if (counselling === 'JAC') {
-            // 🟠 JAC MODE: Only show Delhi Colleges
-            whereClause.OR = [
-                { institute: { contains: 'Delhi Technological University', mode: 'insensitive' } },
-                { institute: { contains: 'Netaji Subhas', mode: 'insensitive' } },
-                { institute: { contains: 'Indira Gandhi Delhi Technical', mode: 'insensitive' } },
-                { institute: { contains: 'Indraprastha Institute', mode: 'insensitive' } }
-            ];
-        } else {
-            // 🔵 JOSAA MODE (Default)
-            
-            // 1. IIT vs NIT Logic (Excluding IITs for Mains)
-            const instituteTypeFilter = isAdvanced 
-                ? { contains: 'Indian Institute of Technology', mode: 'insensitive' } 
-                : { not: { contains: 'Indian Institute of Technology' } }; 
+if (counselling === 'JAC') {
+  whereClause.AND.push({
+    OR: [
+      { institute: { contains: 'Delhi Technological University', mode: 'insensitive' } },
+      { institute: { contains: 'Netaji Subhas', mode: 'insensitive' } },
+      { institute: { contains: 'Indira Gandhi Delhi Technical', mode: 'insensitive' } },
+      { institute: { contains: 'Indraprastha Institute', mode: 'insensitive' } },
+    ],
+  });
+} else {
+  const instituteTypeFilter = isAdvanced
+    ? { contains: 'Indian Institute of Technology', mode: 'insensitive' }
+    : { not: { contains: 'Indian Institute of Technology' } };
 
-            // 2. Exclude JAC colleges to keep JOSAA clean
-            // NOTE: Removed 'mode: insensitive' from NOT clauses to prevent Prisma crash
-            whereClause.AND = [
-                { institute: instituteTypeFilter },
-                { institute: { not: { contains: 'Delhi Technological University' } } },
-                { institute: { not: { contains: 'Netaji Subhas' } } },
-                { institute: { not: { contains: 'Indira Gandhi Delhi Technical' } } },
-                { institute: { not: { contains: 'Indraprastha Institute' } } }
-            ];
-        }
+  whereClause.AND.push(
+    { institute: instituteTypeFilter },
+    { institute: { not: { contains: 'Delhi Technological University' } } },
+    { institute: { not: { contains: 'Netaji Subhas' } } },
+    { institute: { not: { contains: 'Indira Gandhi Delhi Technical' } } },
+    { institute: { not: { contains: 'Indraprastha Institute' } } },
+  );
+}
 
-        // --- 5. DATABASE QUERY ---
-        const colleges = await prisma.college.findMany({
-            where: whereClause,
-            orderBy: { closingRank: 'asc' }
-        });
+const colleges = await prisma.college.findMany({
+  where: whereClause,
+  orderBy: { closingRank: 'asc' },
+//   take: 200,
+});
+
 
         res.status(200).json({
             success: true,

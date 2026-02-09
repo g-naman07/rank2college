@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useModal } from '../context/ModalContext';
 
 const PercentileToRank = () => {
     const [percentile, setPercentile] = useState('');
@@ -6,6 +7,7 @@ const PercentileToRank = () => {
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const { openModal } = useModal();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -36,7 +38,7 @@ const PercentileToRank = () => {
     return (
         // 1. ADDED: min-h-screen, bg-slate-50 (Theme Color), and pt-36 (To clear Navbar)
         <div className="min-h-screen bg-slate-50 text-slate-900 pt-36 pb-20 px-4 relative overflow-hidden">
-            
+
             {/* Optional: Background Grid Effect (Matches other pages) */}
             <div className="absolute inset-0 bg-grid opacity-50 pointer-events-none fixed"></div>
 
@@ -103,9 +105,9 @@ const PercentileToRank = () => {
                 {result && (
                     <div className="mt-8 bg-white border border-slate-200 p-8 rounded-3xl shadow-xl shadow-slate-200/50 text-center relative overflow-hidden">
                         <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
-                        
+
                         <h2 className="text-xl font-bold text-slate-800 mb-6">Prediction Result</h2>
-                        
+
                         <div className="grid grid-cols-2 gap-4 mb-8">
                             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Percentile</p>
@@ -130,8 +132,27 @@ const PercentileToRank = () => {
                         </div>
                     </div>
                 )}
+                {/* 👇 PLACE THE BUTTON HERE (AFTER RESULT CARD) */}
+{result && (
+  <div className="mt-6 text-center">
+    <button
+      onClick={openModal}
+      className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl
+                 bg-gradient-to-r from-indigo-600 to-purple-600
+                 text-white font-bold shadow-lg shadow-indigo-200
+                 hover:scale-[1.02] transition-all"
+    >
+      View Rank vs College →
+    </button>
+
+    <p className="mt-2 text-sm text-slate-500">
+      Explore colleges you can get at this rank
+    </p>
+  </div>
+)}
             </div>
         </div>
+
     );
 };
 
