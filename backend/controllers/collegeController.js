@@ -67,20 +67,28 @@ exports.predictColleges = async (req, res) => {
 
         // --- 5. DATABASE QUERY ---
         const colleges = await prisma.college.findMany({
-            where: {
-                // Only apply filters if they exist in the request
-                ...(category && { category: { equals: category, mode: 'insensitive' } }),
-                ...(quota && { quota: { equals: quota, mode: 'insensitive' } }),
-                ...(gender && { gender: { equals: gender, mode: 'insensitive' } }),
-                
-                // Apply the Exam Mode Filter
-                institute: instituteFilter,
+  where: {
+    ...(category && { category: { equals: category, mode: 'insensitive' } }),
+    ...(quota && { quota: { equals: quota, mode: 'insensitive' } }),
+    ...(gender && { gender: { equals: gender, mode: 'insensitive' } }),
 
-                closingRank: { gte: parseInt(rank) }
-            },
-            orderBy: { closingRank: 'asc' },
-            // take: 100 
-        });
+    institute: instituteFilter,
+
+    AND: [
+    //   { openingRank: { gte: parseInt(rank) } },
+      { closingRank: { gte: parseInt(rank) } }
+    ],
+  },
+
+  orderBy: [
+    // { openingRank: 'asc' },
+    { closingRank: 'asc' }
+  ],
+
+  // OPTIONAL but recommended
+  // take: 200
+});
+
 
         res.status(200).json({
             success: true,
