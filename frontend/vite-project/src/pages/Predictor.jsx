@@ -9,16 +9,16 @@ export default function Predictor() {
   const [form, setForm] = useState({
     rank: '',
     marks: '',
-    category: 'OPEN',
-    quota: 'OS',
-    gender: 'Gender-Neutral',
+    category: '',
+    quota: '',
+    gender: '',
     instituteType: '',
     branchSearch: ''
   });
-  
+
   // New State for Exam Mode
   const [examMode, setExamMode] = useState('JEE_MAINS'); // 'JEE_MAINS' or 'JEE_ADVANCED'
-  const [searchMode, setSearchMode] = useState('rank'); 
+  const [searchMode, setSearchMode] = useState('rank');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
 
@@ -46,13 +46,14 @@ export default function Predictor() {
 
     try {
       const payload = {
-        examMode, // Send the exam mode
-        category: form.category,
-        quota: form.quota,
-        gender: form.gender,
-        rank: searchMode === 'rank' ? Number(form.rank) : undefined,
-        marks: searchMode === 'marks' ? Number(form.marks) : undefined,
-      };
+  examMode,
+  ...(form.category && { category: form.category }),
+  ...(form.quota && { quota: form.quota }),
+  ...(form.gender && { gender: form.gender }),
+  rank: searchMode === 'rank' ? Number(form.rank) : undefined,
+  marks: searchMode === 'marks' ? Number(form.marks) : undefined,
+};
+
 
       const res = await fetch(`${apiBase}/predict`, {
         method: 'POST',
@@ -61,7 +62,7 @@ export default function Predictor() {
       });
 
       const data = await res.json();
-      
+
       if (!data.success) {
         alert(data.message);
         return;
@@ -102,25 +103,25 @@ export default function Predictor() {
     if (!userRank) return { text: "Safe", color: "emerald", icon: CheckCircle2 };
     const diff = closingRank - userRank;
     if (diff > 2000) return { text: "Safe", color: "emerald", icon: CheckCircle2 };
-    if (diff > 500)  return { text: "Likely", color: "blue", icon: CheckCircle2 };
-    if (diff > 0)    return { text: "Borderline", color: "amber", icon: AlertCircle };
+    if (diff > 500) return { text: "Likely", color: "blue", icon: CheckCircle2 };
+    if (diff > 0) return { text: "Borderline", color: "amber", icon: AlertCircle };
     return { text: "Ambitious", color: "rose", icon: XCircle };
   };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 relative selection:bg-indigo-100 selection:text-indigo-900">
-      
+
       {/* Backgrounds */}
       <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none fixed"></div>
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob pointer-events-none fixed"></div>
 
       <div className="container mx-auto max-w-7xl px-4 relative z-10 pt-40 pb-20">
         <div className="grid lg:grid-cols-12 gap-8">
-          
+
           {/* LEFT: CONTROLS */}
           <div className="lg:col-span-4 space-y-6">
             <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sticky top-28">
-              
+
               {/* EXAM TOGGLE (NEW) */}
               <div className="mb-6">
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Select Exam</label>
@@ -141,7 +142,7 @@ export default function Predictor() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                
+
                 {/* Rank/Marks Toggle */}
                 <div className={`bg-slate-100 p-1.5 rounded-xl flex relative ${examMode === 'JEE_ADVANCED' ? 'opacity-50 pointer-events-none' : ''}`}>
                   <button
@@ -149,14 +150,14 @@ export default function Predictor() {
                     onClick={() => setSearchMode('rank')}
                     className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 z-10 ${searchMode === 'rank' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
                   >
-                    <Trophy size={16}/> Rank
+                    <Trophy size={16} /> Rank
                   </button>
                   <button
                     type="button"
                     onClick={() => setSearchMode('marks')}
                     className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 z-10 ${searchMode === 'marks' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
                   >
-                    <Calculator size={16}/> Marks
+                    <Calculator size={16} /> Marks
                   </button>
                 </div>
                 {examMode === 'JEE_ADVANCED' && <p className="text-xs text-center text-slate-400 -mt-3">Marks prediction unavailable for Advanced</p>}
@@ -195,33 +196,33 @@ export default function Predictor() {
 
                 {/* Institute Type (Dynamic) */}
                 <div>
-                   <label className="block text-sm font-bold text-slate-700 mb-2">Institute Type</label>
-                   <select 
-                     name="instituteType" 
-                     value={form.instituteType} 
-                     onChange={handleChange} 
-                     disabled={examMode === 'JEE_ADVANCED'} // Lock for Advanced
-                     className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none font-medium text-slate-700 ${examMode === 'JEE_ADVANCED' ? 'opacity-60 cursor-not-allowed' : ''}`}
-                   >
-                      <option value="">All Institutes</option>
-                      {INSTITUTE_TYPES.map(t => (
-                        // Hide IIT if Mains, Show only IIT if Advanced
-                        <option 
-                          key={t} 
-                          value={t} 
-                          disabled={(examMode === 'JEE_MAINS' && t === 'IIT') || (examMode === 'JEE_ADVANCED' && t !== 'IIT')}
-                          hidden={(examMode === 'JEE_MAINS' && t === 'IIT') || (examMode === 'JEE_ADVANCED' && t !== 'IIT')}
-                        >
-                          {t}
-                        </option>
-                      ))}
-                   </select>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Institute Type</label>
+                  <select
+                    name="instituteType"
+                    value={form.instituteType}
+                    onChange={handleChange}
+                    disabled={examMode === 'JEE_ADVANCED'} // Lock for Advanced
+                    className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none font-medium text-slate-700 ${examMode === 'JEE_ADVANCED' ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  >
+                    <option value="">All Institutes</option>
+                    {INSTITUTE_TYPES.map(t => (
+                      // Hide IIT if Mains, Show only IIT if Advanced
+                      <option
+                        key={t}
+                        value={t}
+                        disabled={(examMode === 'JEE_MAINS' && t === 'IIT') || (examMode === 'JEE_ADVANCED' && t !== 'IIT')}
+                        hidden={(examMode === 'JEE_MAINS' && t === 'IIT') || (examMode === 'JEE_ADVANCED' && t !== 'IIT')}
+                      >
+                        {t}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Branch */}
                 <div>
-                   <label className="block text-sm font-bold text-slate-700 mb-2">Preferred Branch</label>
-                   <input
+                  <label className="block text-sm font-bold text-slate-700 mb-2">Preferred Branch</label>
+                  <input
                     type="text"
                     name="branchSearch"
                     value={form.branchSearch}
@@ -231,8 +232,8 @@ export default function Predictor() {
                   />
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading}
                   className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-xl transition-all flex items-center justify-center gap-2 transform active:scale-95"
                 >
@@ -251,22 +252,27 @@ export default function Predictor() {
                 <p>Select {examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} mode to start.</p>
               </div>
             ) : (
-               <div className="space-y-6">
+              <div className="space-y-6">
                 <div className="flex items-center justify-between bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-                   <div>
-                      <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        Found <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md">{filteredData.length}</span> Colleges
-                      </h3>
-                      <p className="text-sm text-slate-500 mt-1">
-                        Showing results for {examMode === 'JEE_ADVANCED' ? 'JEE Advanced' : 'JEE Mains'}
-                      </p>
-                   </div>
-                   {results.predictedRank && (
-                     <div className="text-right bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100">
-                        <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Est. Rank</span>
-                        <p className="text-2xl font-bold text-emerald-700">#{results.predictedRank}</p>
-                     </div>
-                   )}
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                      Found{' '}
+                      <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md">
+                        {filteredData.length}
+                      </span>
+                      {' '} / {results.data.length} Colleges
+                    </h3>
+
+                    <p className="text-sm text-slate-500 mt-1">
+                      Showing results for {examMode === 'JEE_ADVANCED' ? 'JEE Advanced' : 'JEE Mains'}
+                    </p>
+                  </div>
+                  {results.predictedRank && (
+                    <div className="text-right bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100">
+                      <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Est. Rank</span>
+                      <p className="text-2xl font-bold text-emerald-700">#{results.predictedRank}</p>
+                    </div>
+                  )}
                 </div>
 
                 {/* RESULT CARDS LOOP (Same as previous) */}
@@ -278,7 +284,7 @@ export default function Predictor() {
                       const userRank = results.predictedRank || Number(form.rank);
                       const prob = getProbability(college.closingRank, userRank);
                       const Icon = prob.icon;
-                      
+
                       return (
                         <div key={college.id} className="group relative bg-white rounded-2xl border border-slate-200 p-0 hover:border-indigo-500 transition-all shadow-sm hover:shadow-xl overflow-hidden">
                           <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${prob.color === 'emerald' ? 'bg-emerald-500' : prob.color === 'blue' ? 'bg-blue-500' : prob.color === 'amber' ? 'bg-amber-500' : 'bg-rose-500'}`}></div>
@@ -321,7 +327,7 @@ export default function Predictor() {
                     })
                   )}
                 </div>
-               </div>
+              </div>
             )}
           </div>
 
