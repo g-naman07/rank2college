@@ -114,8 +114,7 @@ function calculateRankFromPercentile(percentile) {
 
     // If percentile is lower than the min in our table (70.0)
     if (p <= 70.0) {
-        // Extrapolate using the last two points: 70.5 (1438000) and 70.0 (1498000)
-        // Slope = (1498000 - 1438000) / (70.0 - 70.5) = 60000 / -0.5 = -120000
+        // Extrapolate
         return 1498000 + (-120000 * (p - 70.0));
     }
 
@@ -124,20 +123,16 @@ function calculateRankFromPercentile(percentile) {
         const upper = PERCENTILE_DATA[i];
         const lower = PERCENTILE_DATA[i+1];
         if (p <= upper.percentile && p >= lower.percentile) {
-            // Linear interpolation
-            // y = y0 + (y1 - y0) * (x - x0) / (x1 - x0)
-            // x is p, x0 is upper.percentile, x1 is lower.percentile
-            // y0 is upper.rank, y1 is lower.rank
             return upper.rank + (lower.rank - upper.rank) * (p - upper.percentile) / (lower.percentile - upper.percentile);
         }
     }
     return 1;
 }
+
 function getRankBracketFromPercentile(percentile) {
     const p = parseFloat(percentile);
     if (isNaN(p)) return null;
 
-    // If above max
     if (p >= PERCENTILE_DATA[0].percentile) {
         return {
             minRank: 1,
@@ -145,16 +140,14 @@ function getRankBracketFromPercentile(percentile) {
         };
     }
 
-    // If below min
     const last = PERCENTILE_DATA[PERCENTILE_DATA.length - 1];
     if (p <= last.percentile) {
         return {
             minRank: last.rank,
-            maxRank: Math.round(last.rank * 1.05) // small buffer
+            maxRank: Math.round(last.rank * 1.05)
         };
     }
 
-    // Find bracket
     for (let i = 0; i < PERCENTILE_DATA.length - 1; i++) {
         const upper = PERCENTILE_DATA[i];
         const lower = PERCENTILE_DATA[i + 1];
@@ -172,18 +165,36 @@ function getRankBracketFromPercentile(percentile) {
 
 exports.predictColleges = async (req, res) => {
     try {
-        let { rank, marks, category, quota, gender, examMode } = req.body;
+        let { rank, marks, category, quota, gender, examMode, counselling } = req.body;
         
-        // --- 1. SANITIZE INPUTS (Fixes whitespace issues) ---
-        if (category) category = category.trim();
-        if (quota) quota = quota.trim();
-        if (gender) gender = gender.trim();
+        // 🔍 DEBUG: This helps you see exactly what the frontend sent
+        console.log("📥 [Backend] Payload Received:", { rank, category, quota, gender, counselling });
+
+        // --- 1. SMART SANITIZATION ---
+        // If the user sends "All Categories", empty string, or null -> Treat as NO FILTER (undefined)
+        if (!category || category === 'All Categories' || category.trim() === '') {
+            category = undefined;
+        } else {
+            category = category.trim();
+        }
+
+        if (!quota || quota === 'All Quotas' || quota === 'All Institutes' || quota.trim() === '') {
+            quota = undefined;
+        } else {
+            quota = quota.trim();
+        }
+
+        if (!gender || gender === 'All Genders' || gender.trim() === '') {
+            gender = undefined;
+        } else {
+            gender = gender.trim();
+        }
 
         // Default to Mains if not specified
         const isAdvanced = examMode === 'JEE_ADVANCED';
         let predictedPercentile = null; 
 
-        // --- 2. RANK CALCULATION (Only for Mains) ---
+        // --- 2. RANK CALCULATION (Mains Only) ---
         if (!rank && marks) {
             if (isAdvanced) {
                 return res.status(400).json({
@@ -209,58 +220,67 @@ exports.predictColleges = async (req, res) => {
                 rank = 800000; // Default fallback
             }
         }
+
         let expectedRankRange = null;
+        if (predictedPercentile) {
+            const bracket = getRankBracketFromPercentile(predictedPercentile);
+            if (bracket) {
+                expectedRankRange = `${bracket.minRank} – ${bracket.maxRank}`;
+            }
+        }
 
-if (predictedPercentile) {
-    const bracket = getRankBracketFromPercentile(predictedPercentile);
-    if (bracket) {
-        expectedRankRange = `${bracket.minRank} – ${bracket.maxRank}`;
-    }
-}
-
-
-        // --- 3. FLEXIBLE VALIDATION (Debug Mode) ---
-        // We allow missing category/quota so you can see ALL data in Postman
+        // --- 3. VALIDATION ---
         if (!rank) {
             return res.status(400).json({ success: false, message: "Rank is required." });
         }
 
         // --- 4. PREPARE FILTERS ---
-        // 'contains' is safer than 'startsWith'
-        const instituteFilter = isAdvanced 
-            ? { contains: 'Indian Institute of Technology' } 
-            : { not: { contains: 'Indian Institute of Technology' } }; 
+        // The spread operator `...` only adds the filter if the variable is NOT undefined.
+        let whereClause = {
+            ...(category && { category: { equals: category, mode: 'insensitive' } }),
+            ...(quota && { quota: { equals: quota, mode: 'insensitive' } }),
+            ...(gender && { gender: { equals: gender, mode: 'insensitive' } }),
+            closingRank: { gte: parseInt(rank) }
+        };
+
+        if (counselling === 'JAC') {
+            // 🟠 JAC MODE: Only show Delhi Colleges
+            whereClause.OR = [
+                { institute: { contains: 'Delhi Technological University', mode: 'insensitive' } },
+                { institute: { contains: 'Netaji Subhas', mode: 'insensitive' } },
+                { institute: { contains: 'Indira Gandhi Delhi Technical', mode: 'insensitive' } },
+                { institute: { contains: 'Indraprastha Institute', mode: 'insensitive' } }
+            ];
+        } else {
+            // 🔵 JOSAA MODE (Default)
+            
+            // 1. IIT vs NIT Logic (Excluding IITs for Mains)
+            const instituteTypeFilter = isAdvanced 
+                ? { contains: 'Indian Institute of Technology', mode: 'insensitive' } 
+                : { not: { contains: 'Indian Institute of Technology' } }; 
+
+            // 2. Exclude JAC colleges to keep JOSAA clean
+            // NOTE: Removed 'mode: insensitive' from NOT clauses to prevent Prisma crash
+            whereClause.AND = [
+                { institute: instituteTypeFilter },
+                { institute: { not: { contains: 'Delhi Technological University' } } },
+                { institute: { not: { contains: 'Netaji Subhas' } } },
+                { institute: { not: { contains: 'Indira Gandhi Delhi Technical' } } },
+                { institute: { not: { contains: 'Indraprastha Institute' } } }
+            ];
+        }
 
         // --- 5. DATABASE QUERY ---
         const colleges = await prisma.college.findMany({
-  where: {
-    ...(category && { category: { equals: category, mode: 'insensitive' } }),
-    ...(quota && { quota: { equals: quota, mode: 'insensitive' } }),
-    ...(gender && { gender: { equals: gender, mode: 'insensitive' } }),
-
-    institute: instituteFilter,
-
-    AND: [
-    //   { openingRank: { gte: parseInt(rank) } },
-      { closingRank: { gte: parseInt(rank) } }
-    ],
-  },
-
-  orderBy: [
-    // { openingRank: 'asc' },
-    { closingRank: 'asc' }
-  ],
-
-  // OPTIONAL but recommended
-  // take: 200
-});
-
+            where: whereClause,
+            orderBy: { closingRank: 'asc' }
+        });
 
         res.status(200).json({
             success: true,
             predictedRank: marks ? rank : null,
             predictedPercentile: predictedPercentile,
-             expectedRankRange,
+            expectedRankRange,
             count: colleges.length,
             data: colleges
         });
@@ -288,17 +308,16 @@ exports.percentileToRank = async (req, res) => {
 
         const bracket = getRankBracketFromPercentile(percentile);
 
-res.status(200).json({
-  success: true,
-  predictedRank: rank,
-  expectedRankRange: bracket
-    ? `${Math.floor(bracket.minRank * multiplier)} – ${Math.floor(bracket.maxRank * multiplier)}`
-    : null
-});
-
+        res.status(200).json({
+            success: true,
+            predictedRank: rank,
+            expectedRankRange: bracket
+                ? `${Math.floor(bracket.minRank * multiplier)} – ${Math.floor(bracket.maxRank * multiplier)}`
+                : null
+        });
 
     } catch (error) {
-        console.    error("❌ API Error:", error);
+        console.error("❌ API Error:", error);
         res.status(500).json({ success: false, message: "Server Error" });
     }
 };

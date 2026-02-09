@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, TrendingUp, Database, Zap } from 'lucide-react'
+import { useModal } from '../context/ModalContext' // Import Global Context
 
 export default function Home() {
   const [marks, setMarks] = useState(178)
+  const { openModal } = useModal(); // Use Global Context instead of local state
 
   const getMetrics = (m) => {
     let p = 0
@@ -29,12 +31,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
       
-      {/* 1. HERO SECTION */}
+      {/* Note: <CounsellingSelector> is removed from here because it is now in App.jsx */}
+
+      {/* 2. HERO SECTION */}
       <section className="relative pt-36 pb-20 overflow-hidden">
-        {/* Light Background Grids & Orbs */}
         <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none"></div>
-        
-        {/* Soft Solarized Blobs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-200/50 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-200/50 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob delay-1000"></div>
 
@@ -63,16 +64,21 @@ export default function Home() {
               </p>
               
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-                <Link to="/josaa/predict" className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 hover:-translate-y-1">
+                {/* HERO BUTTON: Uses openModal */}
+                <button 
+                  onClick={openModal}
+                  className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 hover:-translate-y-1"
+                >
                   Start Prediction <ArrowRight size={20} />
-                </Link>
-                <button className="bg-white text-slate-700 px-8 py-4 rounded-full font-bold hover:bg-slate-50 transition-all border border-slate-200 shadow-sm">
-                  View Past Cutoffs
                 </button>
+                
+                <Link to="/percentile2rank" className="bg-white text-slate-700 px-8 py-4 rounded-full font-bold hover:bg-slate-50 transition-all border border-slate-200 shadow-sm flex items-center gap-2 hover:text-indigo-600">
+                   <TrendingUp size={18} /> Rank Calculator
+                </Link>
               </div>
             </div>
 
-            {/* Glass Card Estimator - LIGHT VERSION */}
+            {/* Glass Card Estimator */}
             <div className="flex-1 w-full max-w-md">
               <div className="glass-card p-8 rounded-3xl relative overflow-hidden">
                 
@@ -108,16 +114,20 @@ export default function Home() {
                   </div>
                 </div>
 
-                <Link to="/josaa/predict" className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl text-center transition-all shadow-lg shadow-indigo-200 relative z-10">
+                {/* CARD BUTTON: Uses openModal */}
+                <button 
+                  onClick={openModal} 
+                  className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl text-center transition-all shadow-lg shadow-indigo-200 relative z-10"
+                >
                   Get Detailed Analysis
-                </Link>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. STATS BAR */}
+      {/* 3. STATS BAR */}
       <section className="border-y border-slate-200 bg-white py-10">
         <div className="container mx-auto px-4">
            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-100">
@@ -136,7 +146,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. FEATURES */}
+      {/* 4. FEATURES */}
       <section className="py-24 relative bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -162,7 +172,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. FOOTER */}
+      {/* 5. FOOTER */}
       <footer className="border-t border-slate-200 bg-white py-12">
         <div className="container mx-auto px-4 text-center">
            <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>

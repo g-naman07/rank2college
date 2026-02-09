@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, Filter, MapPin, Building2, User, BookOpen, Loader2, Trophy, Calculator, CheckCircle2, AlertCircle, XCircle, GraduationCap } from 'lucide-react';
+import { Search, MapPin, Building2, User, BookOpen, Loader2, Trophy, Calculator, CheckCircle2, AlertCircle, XCircle } from 'lucide-react';
 
 const CATEGORIES = ['OPEN', 'OBC-NCL', 'EWS', 'SC', 'ST'];
 const QUOTAS = ['AI', 'HS', 'OS'];
 const INSTITUTE_TYPES = ['IIT', 'NIT', 'IIIT', 'GFTI'];
-const GENDERS = ['Gender-Neutral', 'Female-only (including Supernumerary)']
+const GENDERS = ['Gender-Neutral', 'Female-only (including Supernumerary)'];
+
 export default function Predictor() {
   const [form, setForm] = useState({
     rank: '',
@@ -16,7 +17,7 @@ export default function Predictor() {
     branchSearch: ''
   });
 
-  // New State for Exam Mode
+  // State for Exam Mode
   const [examMode, setExamMode] = useState('JEE_MAINS'); // 'JEE_MAINS' or 'JEE_ADVANCED'
   const [searchMode, setSearchMode] = useState('rank');
   const [loading, setLoading] = useState(false);
@@ -44,16 +45,28 @@ export default function Predictor() {
     setLoading(true);
     setResults(null);
 
+    // 1. SANITIZATION LOGIC
+    const cleanCategory = form.category === 'All Categories' ? undefined : form.category;
+    const cleanQuota = form.quota === 'All Quotas' ? undefined : form.quota;
+    const cleanGender = form.gender === 'All Genders' ? undefined : form.gender;
+    const cleanInstitute = form.instituteType === 'All Institutes' ? undefined : form.instituteType;
+
     try {
+      // 2. BUILD CLEAN PAYLOAD
       const payload = {
-        examMode,
-        ...(form.category && { category: form.category }),
-        ...(form.quota && { quota: form.quota }),
-        ...(form.gender && { gender: form.gender }),
+        examMode, 
+        counselling: 'JOSAA', 
+        
+        ...(cleanCategory && { category: cleanCategory }),
+        ...(cleanQuota && { quota: cleanQuota }),
+        ...(cleanGender && { gender: cleanGender }),
+        ...(cleanInstitute && { instituteType: cleanInstitute }),
+
         rank: searchMode === 'rank' ? Number(form.rank) : undefined,
         marks: searchMode === 'marks' ? Number(form.marks) : undefined,
       };
 
+      console.log("🚀 Sending Payload:", payload); 
 
       const res = await fetch(`${apiBase}/predict`, {
         method: 'POST',
@@ -64,50 +77,50 @@ export default function Predictor() {
       const data = await res.json();
 
       if (!data.success) {
-        alert(data.message);
+        alert(data.message || "No results found");
         return;
       }
       setResults(data);
     } catch (err) {
+      console.error(err);
       alert("Failed to fetch. Is backend running?");
     } finally {
       setLoading(false);
     }
   };
+
   const handleExportPDF = async () => {
-  try {
-    const payload = {
-      examMode,
-      ...(form.category && { category: form.category }),
-      ...(form.quota && { quota: form.quota }),
-      ...(form.gender && { gender: form.gender }),
-      rank: searchMode === 'rank' ? Number(form.rank) : undefined,
-      marks: searchMode === 'marks' ? Number(form.marks) : undefined,
-    };
+    try {
+      const payload = {
+        examMode,
+        ...(form.category && { category: form.category }),
+        ...(form.quota && { quota: form.quota }),
+        ...(form.gender && { gender: form.gender }),
+        rank: searchMode === 'rank' ? Number(form.rank) : undefined,
+        marks: searchMode === 'marks' ? Number(form.marks) : undefined,
+      };
 
-    const res = await fetch(`${apiBase}/predict/pdf`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+      const res = await fetch(`${apiBase}/predict/pdf`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-    if (!res.ok) throw new Error('PDF generation failed');
+      if (!res.ok) throw new Error('PDF generation failed');
 
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'college-prediction.pdf';
-    document.body.appendChild(a);
-    a.click();
-
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-  } catch (err) {
-    alert('Failed to export PDF');
-  }
-};
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'college-prediction.pdf';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      alert('Failed to export PDF');
+    }
+  };
 
 
   // --- CLIENT FILTERING ---
@@ -157,7 +170,7 @@ export default function Predictor() {
           <div className="lg:col-span-4 h-[calc(100vh-10rem)] overflow-y-auto pr-2">
             <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sticky top-28">
 
-              {/* EXAM TOGGLE (NEW) */}
+              {/* EXAM TOGGLE */}
               <div className="mb-6">
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Select Exam</label>
                 <div className="flex bg-slate-100 p-1 rounded-xl">
@@ -177,7 +190,6 @@ export default function Predictor() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-
                 {/* Rank/Marks Toggle */}
                 <div className={`bg-slate-100 p-1.5 rounded-xl flex relative ${examMode === 'JEE_ADVANCED' ? 'opacity-50 pointer-events-none' : ''}`}>
                   <button
@@ -246,19 +258,18 @@ export default function Predictor() {
                   </div>
                 </div>
 
-                {/* Institute Type (Dynamic) */}
+                {/* Institute Type */}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">Institute Type</label>
                   <select
                     name="instituteType"
                     value={form.instituteType}
                     onChange={handleChange}
-                    disabled={examMode === 'JEE_ADVANCED'} // Lock for Advanced
+                    disabled={examMode === 'JEE_ADVANCED'}
                     className={`w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none font-medium text-slate-700 ${examMode === 'JEE_ADVANCED' ? 'opacity-60 cursor-not-allowed' : ''}`}
                   >
                     <option value="">All Institutes</option>
                     {INSTITUTE_TYPES.map(t => (
-                      // Hide IIT if Mains, Show only IIT if Advanced
                       <option
                         key={t}
                         value={t}
@@ -295,7 +306,7 @@ export default function Predictor() {
             </div>
           </div>
 
-          {/* RIGHT: RESULTS (Same as before) */}
+          {/* RIGHT: RESULTS */}
           <div className="lg:col-span-8 h-[calc(100vh-10rem)] overflow-y-auto px-4">
             {!results ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 min-h-[500px] border-2 border-dashed border-slate-200 rounded-3xl bg-white/50">
@@ -304,30 +315,10 @@ export default function Predictor() {
                 <p>Select {examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} mode to start.</p>
               </div>
             ) : (
-              < div className="space-y-6">
+              <div className="space-y-6">
+                
+                {/* 1. Header with Export PDF Button */}
                 <div className="flex items-center justify-between bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-  <div>
-    <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
-      Found{' '}
-      <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md">
-        {filteredData.length}
-      </span>
-      {' '} / {results.data.length} Colleges
-    </h3>
-
-    <p className="text-sm text-slate-500 mt-1">
-      Showing results for {examMode === 'JEE_ADVANCED' ? 'JEE Advanced' : 'JEE Mains'}
-    </p>
-  </div>
-
-  {/* ✅ ADD THIS BUTTON */}
-  <button
-    onClick={handleExportPDF}
-    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold"
-  >
-    Export PDF
-  </button>
-</div>
                   <div>
                     <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                       Found{' '}
@@ -336,20 +327,29 @@ export default function Predictor() {
                       </span>
                       {' '} / {results.data.length} Colleges
                     </h3>
-
                     <p className="text-sm text-slate-500 mt-1">
                       Showing results for {examMode === 'JEE_ADVANCED' ? 'JEE Advanced' : 'JEE Mains'}
                     </p>
                   </div>
-                  {results.predictedRank && (
-                    <div className="text-right bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100">
+                  <button
+                    onClick={handleExportPDF}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold shadow-md transition-all active:scale-95"
+                  >
+                    Export PDF
+                  </button>
+                </div>
+
+                {/* 2. Predicted Rank Info (If applicable) */}
+                {results.predictedRank && (
+                  <div className="flex justify-end">
+                    <div className="text-right bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100 inline-block">
                       <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Est. Rank</span>
                       <p className="text-2xl font-bold text-emerald-700">#{results.predictedRank}</p>
                     </div>
-                  )}
-                
+                  </div>
+                )}
 
-                {/* RESULT CARDS LOOP (Same as previous) */}
+                {/* 3. Result Cards */}
                 <div className="grid gap-4">
                   {filteredData.length === 0 ? (
                     <div className="text-center py-10 text-slate-500">No colleges found. Try adjusting filters.</div>
@@ -404,7 +404,6 @@ export default function Predictor() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </div>
