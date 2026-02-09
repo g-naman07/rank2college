@@ -4,7 +4,7 @@ import { Search, Filter, MapPin, Building2, User, BookOpen, Loader2, Trophy, Cal
 const CATEGORIES = ['OPEN', 'OBC-NCL', 'EWS', 'SC', 'ST'];
 const QUOTAS = ['AI', 'HS', 'OS'];
 const INSTITUTE_TYPES = ['IIT', 'NIT', 'IIIT', 'GFTI'];
-
+const GENDERS = ['Gender-Neutral', 'Female-only (including Supernumerary)']
 export default function Predictor() {
   const [form, setForm] = useState({
     rank: '',
@@ -46,13 +46,13 @@ export default function Predictor() {
 
     try {
       const payload = {
-  examMode,
-  ...(form.category && { category: form.category }),
-  ...(form.quota && { quota: form.quota }),
-  ...(form.gender && { gender: form.gender }),
-  rank: searchMode === 'rank' ? Number(form.rank) : undefined,
-  marks: searchMode === 'marks' ? Number(form.marks) : undefined,
-};
+        examMode,
+        ...(form.category && { category: form.category }),
+        ...(form.quota && { quota: form.quota }),
+        ...(form.gender && { gender: form.gender }),
+        rank: searchMode === 'rank' ? Number(form.rank) : undefined,
+        marks: searchMode === 'marks' ? Number(form.marks) : undefined,
+      };
 
 
       const res = await fetch(`${apiBase}/predict`, {
@@ -109,17 +109,17 @@ export default function Predictor() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 relative selection:bg-indigo-100 selection:text-indigo-900">
+    <div className="min-h-screen bg-slate-50 overflow-hidden text-slate-900 relative selection:bg-indigo-100 selection:text-indigo-900">
 
       {/* Backgrounds */}
       <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none fixed"></div>
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob pointer-events-none fixed"></div>
 
-      <div className="container mx-auto max-w-7xl px-4 relative z-10 pt-40 pb-20">
+      <div className="container mx-auto max-w-7xl px-4 relative z-10 pt-40 pb-6 h-full">
         <div className="grid lg:grid-cols-12 gap-8">
 
           {/* LEFT: CONTROLS */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 h-[calc(100vh-10rem)] overflow-y-auto pr-2">
             <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sticky top-28">
 
               {/* EXAM TOGGLE (NEW) */}
@@ -176,6 +176,23 @@ export default function Predictor() {
                     placeholder="e.g. 15000"
                     className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-slate-900"
                   />
+                </div>
+                {/* Gender */}
+                <div>
+                  <label className="block text-sm font-bold text-slate-700 mb-2">
+                    Gender
+                  </label>
+                  <select
+                    name="gender"
+                    value={form.gender}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none font-medium text-slate-700"
+                  >
+                    <option value="">All Genders</option>
+                    {GENDERS.map(g => (
+                      <option key={g} value={g}>{g}</option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Dropdowns */}
@@ -244,7 +261,7 @@ export default function Predictor() {
           </div>
 
           {/* RIGHT: RESULTS (Same as before) */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 h-[calc(100vh-10rem)] overflow-y-auto px-4">
             {!results ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 min-h-[500px] border-2 border-dashed border-slate-200 rounded-3xl bg-white/50">
                 <Search size={48} className="mb-4 opacity-20" />
