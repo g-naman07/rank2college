@@ -74,6 +74,41 @@ export default function Predictor() {
       setLoading(false);
     }
   };
+  const handleExportPDF = async () => {
+  try {
+    const payload = {
+      examMode,
+      ...(form.category && { category: form.category }),
+      ...(form.quota && { quota: form.quota }),
+      ...(form.gender && { gender: form.gender }),
+      rank: searchMode === 'rank' ? Number(form.rank) : undefined,
+      marks: searchMode === 'marks' ? Number(form.marks) : undefined,
+    };
+
+    const res = await fetch(`${apiBase}/predict/pdf`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error('PDF generation failed');
+
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'college-prediction.pdf';
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Failed to export PDF');
+  }
+};
+
 
   // --- CLIENT FILTERING ---
   const filteredData = useMemo(() => {
@@ -269,8 +304,30 @@ export default function Predictor() {
                 <p>Select {examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} mode to start.</p>
               </div>
             ) : (
-              <div className="space-y-6">
+              < div className="space-y-6">
                 <div className="flex items-center justify-between bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+  <div>
+    <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+      Found{' '}
+      <span className="bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded-md">
+        {filteredData.length}
+      </span>
+      {' '} / {results.data.length} Colleges
+    </h3>
+
+    <p className="text-sm text-slate-500 mt-1">
+      Showing results for {examMode === 'JEE_ADVANCED' ? 'JEE Advanced' : 'JEE Mains'}
+    </p>
+  </div>
+
+  {/* ✅ ADD THIS BUTTON */}
+  <button
+    onClick={handleExportPDF}
+    className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold"
+  >
+    Export PDF
+  </button>
+</div>
                   <div>
                     <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
                       Found{' '}
@@ -290,7 +347,7 @@ export default function Predictor() {
                       <p className="text-2xl font-bold text-emerald-700">#{results.predictedRank}</p>
                     </div>
                   )}
-                </div>
+                
 
                 {/* RESULT CARDS LOOP (Same as previous) */}
                 <div className="grid gap-4">
