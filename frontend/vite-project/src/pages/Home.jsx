@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, TrendingUp, Database, Zap } from 'lucide-react'
 import { useModal } from '../context/ModalContext' // Import Global Context
 
+// 👇 1. IMPORT THE NEW CAROUSEL COMPONENT
+import LogoCarousel from '../components/LogoCarousel'; 
+
 export default function Home() {
   const [marks, setMarks] = useState(178)
   const { openModal } = useModal(); // Use Global Context instead of local state
@@ -31,8 +34,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
       
-      {/* Note: <CounsellingSelector> is removed from here because it is now in App.jsx */}
-
       {/* 2. HERO SECTION */}
       <section className="relative pt-36 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none"></div>
@@ -106,6 +107,7 @@ export default function Home() {
                   <input 
                     min="0" max="300" step="1" type="range" 
                     value={marks} onChange={(e) => setMarks(Number(e.target.value))}
+                    className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                   />
                   <div className="flex justify-between text-[10px] text-slate-400 mt-3 font-mono">
                     <span>0</span>
@@ -127,13 +129,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. STATS BAR */}
+      {/* 👇 3. INSERTED LOGO CAROUSEL HERE */}
+      <LogoCarousel />
+
+      {/* 4. STATS BAR */}
       <section className="border-y border-slate-200 bg-white py-10">
         <div className="container mx-auto px-4">
            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-100">
               {[
                  { label: "Accuracy", value: "99.2%" },
-                 { label: "Colleges", value: "300+" },
+                 { label: "Colleges", value: "6000+" },
                  { label: "Students", value: "15k+" },
                  { label: "Speed", value: "<100ms" },
               ].map((stat, i) => (
@@ -146,7 +151,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. FEATURES */}
+      {/* 5. FEATURES */}
       <section className="py-24 relative bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
@@ -172,7 +177,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. FOOTER */}
+      {/* 6. FOOTER */}
       <footer className="border-t border-slate-200 bg-white py-12">
         <div className="container mx-auto px-4 text-center">
            <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
