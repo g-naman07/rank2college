@@ -11,7 +11,7 @@ import Home from './pages/Home';
 import Predictor from './pages/Predictor';
 import JacPredictor from './pages/JacPredictor';
 import PercentileToRank from './pages/PercentileToRank';
-import Aboutus from './pages/Aboutus'
+import Aboutus from './pages/About'
 // Helper to render the Modal globally
 const GlobalModal = () => {
   const { isModalOpen, closeModal } = useModal();
