@@ -10,8 +10,8 @@ export default function Predictor() {
   const [form, setForm] = useState({
     rank: '',
     marks: '',
-    category: '',
-    quota: '',
+    category: 'OPEN',
+    quota: 'AI',
     gender: '',
     instituteType: '',
     branchSearch: ''
@@ -54,9 +54,9 @@ export default function Predictor() {
     try {
       // 2. BUILD CLEAN PAYLOAD
       const payload = {
-        examMode, 
-        counselling: 'JOSAA', 
-        
+        examMode,
+        counselling: 'JOSAA',
+
         ...(cleanCategory && { category: cleanCategory }),
         ...(cleanQuota && { quota: cleanQuota }),
         ...(cleanGender && { gender: cleanGender }),
@@ -66,7 +66,7 @@ export default function Predictor() {
         marks: searchMode === 'marks' ? Number(form.marks) : undefined,
       };
 
-      console.log("🚀 Sending Payload:", payload); 
+      console.log("🚀 Sending Payload:", payload);
 
       const res = await fetch(`${apiBase}/predict`, {
         method: 'POST',
@@ -163,11 +163,11 @@ export default function Predictor() {
       <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none fixed"></div>
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob pointer-events-none fixed"></div>
 
-      <div className="container mx-auto max-w-7xl px-4 relative z-10 pt-40 pb-6 h-full">
+      <div className="w-full px-6 xl:px-10 relative z-10 pt-40 pb-6 h-full">
         <div className="grid lg:grid-cols-12 gap-8">
 
           {/* LEFT: CONTROLS */}
-          <div className="lg:col-span-4 h-[calc(100vh-10rem)] overflow-y-auto pr-2">
+          <div className="lg:col-span-3 h-[calc(100vh-10rem)] overflow-y-auto pr-2">
             <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sticky top-28">
 
               {/* EXAM TOGGLE */}
@@ -307,7 +307,7 @@ export default function Predictor() {
           </div>
 
           {/* RIGHT: RESULTS */}
-          <div className="lg:col-span-8 h-[calc(100vh-10rem)] overflow-y-auto px-4">
+          <div className="lg:col-span-9 h-[calc(100vh-10rem)] overflow-y-auto px-6 xl:px-8">
             {!results ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 min-h-[500px] border-2 border-dashed border-slate-200 rounded-3xl bg-white/50">
                 <Search size={48} className="mb-4 opacity-20" />
@@ -316,7 +316,7 @@ export default function Predictor() {
               </div>
             ) : (
               <div className="space-y-6">
-                
+
                 {/* 1. Header with Export PDF Button */}
                 <div className="flex items-center justify-between bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                   <div>
@@ -381,20 +381,58 @@ export default function Predictor() {
                                 <span className="text-xs font-bold px-2 py-1 rounded border border-slate-200 text-slate-500 bg-slate-50">{college.category}</span>
                               </div>
                             </div>
-                            <div className="flex flex-col gap-3 min-w-[150px]">
-                              <div className="text-right p-3 rounded-xl bg-slate-50 border border-slate-100">
-                                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Closing Rank</p>
-                                <p className="text-2xl font-black text-indigo-600">#{college.closingRank}</p>
+                            <div className="flex flex-col justify-between min-w-[170px] gap-3">
+
+                              {/* Closing Rank */}
+                              <div className="text-center px-3 py-2 rounded-xl bg-indigo-50 border border-indigo-100">
+                                <p className="text-[10px] uppercase font-bold text-indigo-400 tracking-wide">
+                                  Closing Rank
+                                </p>
+                                <p className="text-2xl font-extrabold text-indigo-600 leading-tight">
+                                  #{college.closingRank}
+                                </p>
                               </div>
+
+                              {/* Gender Badge */}
+                              {college.gender && (
+                                <div className="text-center">
+                                  <span className="inline-flex items-center text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                                    <User size={12} className="mr-1 opacity-70" />
+                                    {college.gender}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* Rank Probability Bar */}
                               {userRank && (
-                                <div className="text-right">
-                                  <div className="flex justify-between text-[10px] text-slate-400 mb-1"><span>Your Rank</span><span>{userRank}</span></div>
+                                <div>
+                                  <div className="flex justify-between text-[9px] text-slate-400 mb-1">
+                                    <span>You</span>
+                                    <span>{userRank}</span>
+                                  </div>
                                   <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                    <div className={`h-full rounded-full ${prob.color === 'emerald' ? 'bg-emerald-500' : prob.color === 'blue' ? 'bg-blue-500' : prob.color === 'amber' ? 'bg-amber-500' : 'bg-rose-500'}`} style={{ width: `${Math.min(100, (userRank / college.closingRank) * 100)}%` }}></div>
+                                    <div
+                                      className={`h-full rounded-full ${prob.color === 'emerald'
+                                        ? 'bg-emerald-500'
+                                        : prob.color === 'blue'
+                                          ? 'bg-blue-500'
+                                          : prob.color === 'amber'
+                                            ? 'bg-amber-500'
+                                            : 'bg-rose-500'
+                                        }`}
+                                      style={{
+                                        width: `${Math.min(
+                                          100,
+                                          (userRank / college.closingRank) * 100
+                                        )}%`,
+                                      }}
+                                    ></div>
                                   </div>
                                 </div>
                               )}
                             </div>
+
+
                           </div>
                         </div>
                       );

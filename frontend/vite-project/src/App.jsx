@@ -11,7 +11,7 @@ import Home from './pages/Home';
 import Predictor from './pages/Predictor';
 import JacPredictor from './pages/JacPredictor';
 import PercentileToRank from './pages/PercentileToRank';
-
+import Aboutus from './pages/Aboutus'
 // Helper to render the Modal globally
 const GlobalModal = () => {
   const { isModalOpen, closeModal } = useModal();
@@ -30,6 +30,7 @@ function App() {
       
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/about" element={<Aboutus />} />
         <Route path="/josaa/predict" element={<Predictor />} />
         <Route path="/jac/predict" element={<JacPredictor />} />
         <Route path="/percentile2rank" element={<PercentileToRank />} />

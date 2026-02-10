@@ -25,10 +25,13 @@ export default function Navbar() {
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
           <nav className="bg-white/80 backdrop-blur-md border border-slate-200/60 px-8 py-3.5 rounded-full shadow-2xl shadow-slate-200/50 flex gap-8 text-xs font-extrabold tracking-widest text-slate-500 uppercase">
             <Link to="/" className="hover:text-indigo-600 transition-colors">Home</Link>
-            <Link to="/percentile2rank" className="hover:text-indigo-600 transition-colors">Rank Calc</Link>
-            <a href="#features" className="hover:text-indigo-600 transition-colors">Features</a>
-            <a href="#about" className="hover:text-indigo-600 transition-colors">About Us</a>
-            <a href="#faq" className="hover:text-indigo-600 transition-colors">FAQ</a>
+            <Link to="/percentile2rank" className="hover:text-indigo-600 transition-colors">Percentile To Rank</Link>
+            <Link to="/josaa/predict" className="hover:text-indigo-600 transition-colors">JOSAA PREDICTOR</Link>
+            <Link to="/jac/predict" className="hover:text-indigo-600 transition-colors">JAC PREDICTOR</Link>
+
+            {/* <a href="#about" className="hover:text-indigo-600 transition-colors">About Us</a> */}
+            {/* <a href="#faq" className="hover:text-indigo-600 transition-colors">FAQ</a> */}
+            <Link to="/about" className="hover:text-indigo-600 transition-colors">About The tool</Link>
           </nav>
         </div>
 
