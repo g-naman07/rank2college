@@ -37,7 +37,7 @@ export default function CounsellingSelector({ isOpen, onClose }) {
             className="group p-6 rounded-2xl border-2 border-slate-100 hover:border-indigo-600 hover:bg-indigo-50 transition-all text-center"
           >
             <div className="w-16 h-16 mx-auto bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4 group-hover:scale-110 transition-transform">
-              <Globe size={32} />
+              <img src="/logos/josaa.png" alt="JOSAA" className="h-8 w-auto" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-2">JOSAA (All India)</h3>
             <p className="text-sm text-slate-500">For IITs, NITs, IIITs & GFTIs based on JEE Mains & Advanced.</p>
@@ -51,7 +51,7 @@ export default function CounsellingSelector({ isOpen, onClose }) {
             className="group p-6 rounded-2xl border-2 border-slate-100 hover:border-orange-600 hover:bg-orange-50 transition-all text-center"
           >
             <div className="w-16 h-16 mx-auto bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-4 group-hover:scale-110 transition-transform">
-              <MapPin size={32} />
+              <img src="/logos/jac.png" alt="JAC Delhi" className="h-8 w-auto" />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-2">JAC Delhi</h3>
             <p className="text-sm text-slate-500">For DTU, NSUT, IIIT-D & IGDTUW. (Delhi & Outside Delhi Quota)</p>

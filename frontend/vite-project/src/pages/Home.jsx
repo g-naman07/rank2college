@@ -4,7 +4,7 @@ import { ArrowRight, TrendingUp, Database, Zap } from 'lucide-react'
 import { useModal } from '../context/ModalContext' // Import Global Context
 
 // 👇 1. IMPORT THE NEW CAROUSEL COMPONENT
-import LogoCarousel from '../components/LogoCarousel'; 
+import LogoCarousel from '../components/LogoCarousel';
 
 export default function Home() {
   const [marks, setMarks] = useState(178)
@@ -42,7 +42,7 @@ export default function Home() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-16">
-            
+
             {/* Text Content */}
             <div className="flex-1 text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600 mb-6">
@@ -52,37 +52,84 @@ export default function Home() {
                 </span>
                 Updated for 2026 Batch
               </div>
-              
+
               <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-slate-900">
-                Predict Your <br />
+                Percentile to <br />
                 <span className="text-gradient">
-                  Dream College.
+                  College & Rank Tool.
                 </span>
               </h1>
-              
+
               <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                Stop guessing. Our AI-driven engine analyzes 5 years of JOSAA data to give you accurate rank & college predictions in milliseconds.
+                 Use our percentile-first tools to estimate rank ranges and your best-fit colleges across JOSAA and JAC.
               </p>
+
+              <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
+                <img src="/logos/alliits.jpg" alt="JOSAA Counselling" className="h-20 w-auto" />
+                <img src="/logos/allnits.jpg" alt="JOSAA Counselling" className="h-20 w-auto" />
+                <div className="h-6 w-px bg-slate-200"></div>
+                <img src="/logos/jac.png" alt="JAC Delhi Counselling" className="h-20 w-auto" />
+              </div>
               
+
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                 {/* HERO BUTTON: Uses openModal */}
-                <button 
+                <button
                   onClick={openModal}
                   className="bg-indigo-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 hover:-translate-y-1"
                 >
-                  Start Prediction <ArrowRight size={20} />
+                  Start Predictor <ArrowRight size={20} />
                 </button>
-                
+                  
                 <Link to="/percentile2rank" className="bg-white text-slate-700 px-8 py-4 rounded-full font-bold hover:bg-slate-50 transition-all border border-slate-200 shadow-sm flex items-center gap-2 hover:text-indigo-600">
-                   <TrendingUp size={18} /> Rank Calculator
+                  <TrendingUp size={18} /> PERCENTILE TOOL
                 </Link>
               </div>
-            </div>
+              <br />
+             <div className="flex flex-wrap gap-4">
+  {/* 100% FREE - Green Theme */}
+  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-emerald-100 shadow-sm text-xs font-medium text-emerald-700">
+    <span className="relative flex h-2 w-2">
+      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+    </span>
+    100% FREE
+  </div>
 
+  {/* ACCURATE - Amber/Gold Theme */}
+  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-amber-100 shadow-sm text-xs font-medium text-amber-700">
+    <span className="relative flex h-2 w-2">
+      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+    </span>
+    ACCURATE
+  </div>
+
+  {/* NO SIGNIN - Indigo Theme (Original) */}
+  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600">
+    <span className="relative flex h-2 w-2">
+      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+      <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+    </span>
+    NO LOGIN REQUIRED
+  </div>
+
+  {/* NO ADS - Rose/Red Theme */}
+  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-rose-100 shadow-sm text-xs font-medium text-rose-700">
+    <span className="relative flex h-2 w-2">
+      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+      <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+    </span>
+    NO ADS
+  </div>
+</div>
+            </div>
+            
+            
             {/* Glass Card Estimator */}
             <div className="flex-1 w-full max-w-md">
               <div className="glass-card p-8 rounded-3xl relative overflow-hidden">
-                
+
                 <div className="text-center mb-8 relative z-10">
                   <h3 className="text-2xl font-bold text-slate-800 mb-1">Rank Simulator</h3>
                   <p className="text-sm text-slate-500">Drag to estimate instantly</p>
@@ -104,8 +151,8 @@ export default function Home() {
                     <span className="text-slate-600">Marks (Out of 300)</span>
                     <span className="text-white font-bold bg-indigo-600 px-2 py-1 rounded text-xs">{marks}</span>
                   </div>
-                  <input 
-                    min="0" max="300" step="1" type="range" 
+                  <input
+                    min="0" max="300" step="1" type="range"
                     value={marks} onChange={(e) => setMarks(Number(e.target.value))}
                     className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
                   />
@@ -115,10 +162,16 @@ export default function Home() {
                     <span>300</span>
                   </div>
                 </div>
-
+<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600 mb-6">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                </span>
+                Updated for 2026 Batch
+              </div>
                 {/* CARD BUTTON: Uses openModal */}
-                <button 
-                  onClick={openModal} 
+                <button
+                  onClick={openModal}
                   className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl text-center transition-all shadow-lg shadow-indigo-200 relative z-10"
                 >
                   Get Detailed Analysis
@@ -135,52 +188,91 @@ export default function Home() {
       {/* 4. STATS BAR */}
       <section className="border-y border-slate-200 bg-white py-10">
         <div className="container mx-auto px-4">
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-100">
-              {[
-                 { label: "Accuracy", value: "99.2%" },
-                 { label: "Colleges", value: "6000+" },
-                 { label: "Students", value: "15k+" },
-                 { label: "Speed", value: "<100ms" },
-              ].map((stat, i) => (
-                 <div key={i}>
-                    <div className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</div>
-                    <div className="text-sm text-slate-400 uppercase tracking-widest font-bold">{stat.label}</div>
-                 </div>
-              ))}
-           </div>
-        </div>
-      </section>
-
-      {/* 5. FEATURES */}
-      <section className="py-24 relative bg-slate-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-slate-900">Everything you need</h2>
-             <p className="text-slate-600">Advanced tools for the modern aspirant</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-slate-100">
             {[
-              { icon: <TrendingUp size={24}/>, title: "Trend Analysis", desc: "Visual graphs showing how cutoffs change year over year." },
-              { icon: <Database size={24}/>, title: "Category Deep-Dive", desc: "Specific logic for OBC, SC, ST, and EWS ranks." },
-              { icon: <Zap size={24}/>, title: "Instant Search", desc: "No loading spinners. Get results immediately." },
-            ].map((f, i) => (
-              <div key={i} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all group">
-                 <div className="w-12 h-12 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 mb-6 group-hover:scale-110 transition-transform">
-                    {f.icon}
-                 </div>
-                 <h3 className="text-xl font-bold text-slate-900 mb-3">{f.title}</h3>
-                 <p className="text-slate-600 leading-relaxed">{f.desc}</p>
+              { label: "Accuracy", value: "99.2%" },
+              { label: "Colleges", value: "6000+" },
+              { label: "Students", value: "15k+" },
+              { label: "Speed", value: "<100ms" },
+            ].map((stat, i) => (
+              <div key={i}>
+                <div className="text-3xl font-bold text-slate-800 mb-1">{stat.value}</div>
+                <div className="text-sm text-slate-400 uppercase tracking-widest font-bold">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
+      {/* 5. FEATURES */}
+              <section className="py-28 relative bg-gradient-to-b from-slate-50 to-white">
+  <div className="container mx-auto px-4">
+    
+    {/* Header */}
+    <div className="text-center mb-20 max-w-2xl mx-auto">
+      <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-900 tracking-tight">
+        Everything You Need to Decide Smarter
+      </h2>
+      <p className="text-slate-600 text-lg">
+        Data-driven insights built for serious engineering aspirants
+      </p>
+    </div>
+
+    {/* Features */}
+    <div className="grid md:grid-cols-3 gap-8">
+      {[
+        {
+          icon: <TrendingUp size={26} />,
+          title: "Cutoff Trend Analysis",
+          desc: "Year-wise cutoff trends that help you identify safe, moderate, and ambitious college choices."
+        },
+        {
+          icon: <Database size={26} />,
+          title: "Category-Wise Precision",
+          desc: "Carefully tuned logic for OBC, SC, ST & EWS ranks—no generic assumptions."
+        },
+        {
+          icon: <Zap size={26} />,
+          title: "Instant Results Engine",
+          desc: "Blazing-fast search with zero waiting. Adjust inputs and see results instantly."
+        }
+      ].map((f, i) => (
+        <div
+          key={i}
+          className="group bg-white p-8 rounded-2xl border border-slate-200
+                     shadow-sm hover:shadow-xl hover:-translate-y-1
+                     transition-all duration-300"
+        >
+          <div className="w-14 h-14 rounded-xl bg-gradient-to-br
+                          from-indigo-500 to-indigo-600
+                          flex items-center justify-center
+                          text-white mb-6
+                          group-hover:scale-110 transition-transform">
+            {f.icon}
+          </div>
+
+          <h3 className="text-xl font-bold text-slate-900 mb-3">
+            {f.title}
+          </h3>
+
+          <p className="text-slate-600 leading-relaxed">
+            {f.desc}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+
+
       {/* 6. FOOTER */}
       <footer className="border-t border-slate-200 bg-white py-12">
         <div className="container mx-auto px-4 text-center">
-           <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
+          <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
+          <br />
+          <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends. Official counselling results may differ. Always verify with official counselling portals.</p>
+           <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
         </div>
       </footer>
     </div>

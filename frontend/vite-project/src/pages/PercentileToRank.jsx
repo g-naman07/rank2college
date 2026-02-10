@@ -45,9 +45,9 @@ const PercentileToRank = () => {
             <div className="container mx-auto max-w-2xl relative z-10">
                 <div className="text-center mb-10">
                     <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
-                        Percentile to Rank
+                        Percentile to College & Rank
                     </h1>
-                    <p className="text-slate-500">Calculate your expected rank based on NTA trends.</p>
+                    <p className="text-slate-500">Estimate your rank range first, then explore college options.</p>
                 </div>
 
                 <div className="bg-white shadow-xl shadow-slate-200/60 rounded-3xl p-8 border border-slate-100">
@@ -91,7 +91,7 @@ const PercentileToRank = () => {
                             type="submit"
                             disabled={loading}
                         >
-                            {loading ? 'Calculating...' : 'Predict Rank'}
+                            {loading ? 'Calculating...' : 'Estimate Rank'}
                         </button>
                     </form>
                 </div>
@@ -151,6 +151,13 @@ const PercentileToRank = () => {
   </div>
 )}
             </div>
+            <footer className="border-t border-slate-200 bg-white py-10 mt-14">
+                <div className="container mx-auto px-4 text-center">
+                    <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
+                    <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends. Official counselling results may differ. Always verify with official counselling portals.</p>
+                     <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
+                </div>
+            </footer>
         </div>
 
     );

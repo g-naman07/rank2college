@@ -18,10 +18,10 @@ export default function About() {
             <BookOpen size={14} /> Comprehensive Guide
           </div>
           <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">
-            JEE Main <span className="text-indigo-600">College Predictor Guide</span>
+            <span className="text-indigo-600">Percentile to College & Rank</span> Guide
           </h1>
           <p className="text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto">
-            Predict your engineering college admission chances based on your JEE Main rank or percentile using our comprehensive analysis tool.
+            Understand how percentile converts to rank and how that rank maps to likely college options across counselling rounds.
           </p>
         </div>
       </section>
@@ -35,7 +35,7 @@ export default function About() {
 
         <div className="grid md:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {[
-            { icon: <Target className="text-indigo-600" />, title: "Enter Rank", desc: "Input your JEE Main Rank or Percentile accurately." },
+            { icon: <Target className="text-indigo-600" />, title: "Enter Percentile", desc: "Input your JEE Main percentile or rank accurately." },
             { icon: <Users className="text-pink-600" />, title: "Select Category", desc: "Choose General, OBC, SC, ST, or EWS for precise quotas." },
             { icon: <MapPin className="text-orange-600" />, title: "Home State", desc: "Select your state to avail Home State (HS) quota benefits." },
             { icon: <BarChart3 className="text-emerald-600" />, title: "Get Results", desc: "Instant list of colleges & branches you are eligible for." },
@@ -259,6 +259,14 @@ export default function About() {
           </div>
         </div>
       </section>
+
+      <footer className="border-t border-slate-200 bg-white py-10">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
+          <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends. Official counselling results may differ. Always verify with official counselling portals.</p>
+           <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
+        </div>
+      </footer>
 
     </div>
   );

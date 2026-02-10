@@ -240,7 +240,11 @@ exports.predictColleges = async (req, res) => {
   AND: [
     ...(category ? [{ category: { equals: category, mode: 'insensitive' } }] : []),
     ...(quota ? [{ quota: { equals: quota, mode: 'insensitive' } }] : []),
-    ...(gender ? [{ gender: { equals: gender, mode: 'insensitive' } }] : []),
+    ...(gender && counselling !== 'JAC'
+  ? [{ gender: { equals: gender, mode: 'insensitive' } }]
+  : []),
+
+
     {
       closingRank: {
         gte: parseInt(rank),
@@ -255,11 +259,14 @@ if (counselling === 'JAC') {
     OR: [
       { institute: { contains: 'Delhi Technological University', mode: 'insensitive' } },
       { institute: { contains: 'Netaji Subhas', mode: 'insensitive' } },
-      { institute: { contains: 'Indira Gandhi Delhi Technical', mode: 'insensitive' } },
       { institute: { contains: 'Indraprastha Institute', mode: 'insensitive' } },
+      { institute: { contains: 'Indira Gandhi Delhi Technical University for Women', mode: 'insensitive' } },
+      { institute: { contains: 'IGDTUW', mode: 'insensitive' } },
     ],
   });
-} else {
+}
+
+ else {
   const instituteTypeFilter = isAdvanced
     ? { contains: 'Indian Institute of Technology', mode: 'insensitive' }
     : { not: { contains: 'Indian Institute of Technology' } };

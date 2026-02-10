@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Search, MapPin, Building2, User, BookOpen, Loader2, Trophy, Calculator, CheckCircle2, AlertCircle, XCircle } from 'lucide-react';
+import { Search, MapPin, Building2, User, BookOpen, Loader2, Trophy, TrendingUp, CheckCircle2, AlertCircle, XCircle } from 'lucide-react';
 
 const CATEGORIES = ['OPEN', 'OBC-NCL', 'EWS', 'SC', 'ST'];
 const QUOTAS = ['AI', 'HS', 'OS'];
@@ -9,7 +9,7 @@ const GENDERS = ['Gender-Neutral', 'Female-only (including Supernumerary)'];
 export default function Predictor() {
   const [form, setForm] = useState({
     rank: '',
-    marks: '',
+    percentile: '',
     category: 'OPEN',
     quota: 'AI',
     gender: '',
@@ -19,7 +19,7 @@ export default function Predictor() {
 
   // State for Exam Mode
   const [examMode, setExamMode] = useState('JEE_MAINS'); // 'JEE_MAINS' or 'JEE_ADVANCED'
-  const [searchMode, setSearchMode] = useState('rank');
+  const [searchMode, setSearchMode] = useState('percentile');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
 
@@ -28,17 +28,41 @@ export default function Predictor() {
   // --- EFFECT: Handle Exam Mode Switching ---
   useEffect(() => {
     if (examMode === 'JEE_ADVANCED') {
-      // If Advanced: Force Rank Mode (no marks prediction) & Reset Institute
+      // If Advanced: Force Rank Mode (no percentile mode) & Reset Institute
       setSearchMode('rank');
       setForm(prev => ({ ...prev, instituteType: 'IIT', quota: 'AI' })); // IITs are usually All India
     } else {
       // If Mains: Reset to default
+      setSearchMode('percentile');
       setForm(prev => ({ ...prev, instituteType: '' }));
     }
     setResults(null); // Clear old results
   }, [examMode]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const resolveRankForRequest = async () => {
+    if (searchMode === 'rank') {
+      return { rank: Number(form.rank), range: null, percentile: null };
+    }
+
+    const response = await fetch(`${apiBase}/percentile2rank`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ percentile: form.percentile, category: form.category })
+    });
+
+    const data = await response.json();
+    if (!data.success) {
+      throw new Error(data.message || 'Failed to calculate rank');
+    }
+
+    return {
+      rank: data.predictedRank,
+      range: data.expectedRankRange || null,
+      percentile: form.percentile
+    };
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +76,8 @@ export default function Predictor() {
     const cleanInstitute = form.instituteType === 'All Institutes' ? undefined : form.instituteType;
 
     try {
+      const rankInfo = await resolveRankForRequest();
+
       // 2. BUILD CLEAN PAYLOAD
       const payload = {
         examMode,
@@ -62,8 +88,7 @@ export default function Predictor() {
         ...(cleanGender && { gender: cleanGender }),
         ...(cleanInstitute && { instituteType: cleanInstitute }),
 
-        rank: searchMode === 'rank' ? Number(form.rank) : undefined,
-        marks: searchMode === 'marks' ? Number(form.marks) : undefined,
+        rank: rankInfo.rank,
       };
 
       console.log("🚀 Sending Payload:", payload);
@@ -80,10 +105,15 @@ export default function Predictor() {
         alert(data.message || "No results found");
         return;
       }
-      setResults(data);
+      setResults({
+        ...data,
+        predictedRank: searchMode === 'percentile' ? rankInfo.rank : data.predictedRank,
+        expectedRankRange: searchMode === 'percentile' ? rankInfo.range : data.expectedRankRange,
+        predictedPercentile: searchMode === 'percentile' ? rankInfo.percentile : data.predictedPercentile
+      });
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch. Is backend running?");
+      alert(err?.message || "Failed to fetch. Is backend running?");
     } finally {
       setLoading(false);
     }
@@ -91,13 +121,13 @@ export default function Predictor() {
 
   const handleExportPDF = async () => {
     try {
+      const rankInfo = await resolveRankForRequest();
       const payload = {
         examMode,
         ...(form.category && { category: form.category }),
         ...(form.quota && { quota: form.quota }),
         ...(form.gender && { gender: form.gender }),
-        rank: searchMode === 'rank' ? Number(form.rank) : undefined,
-        marks: searchMode === 'marks' ? Number(form.marks) : undefined,
+        rank: rankInfo.rank,
       };
 
       const res = await fetch(`${apiBase}/predict/pdf`, {
@@ -164,6 +194,14 @@ export default function Predictor() {
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob pointer-events-none fixed"></div>
 
       <div className="w-full px-6 xl:px-10 relative z-10 pt-40 pb-6 h-full">
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <img src="/logos/josaa.png" alt="JOSAA Counselling" className="h-10 w-auto" />
+            {/* <img src="/logos/alliits.jpg" alt="JOSAA Counselling" className="h-10 w-auto" /> */}
+          </div>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-3">Percentile to College & Rank</h1>
+          <p className="text-slate-600">JOSAA predictor for IITs, NITs, IIITs, and GFTIs.</p>
+        </div>
         <div className="grid lg:grid-cols-12 gap-8">
 
           {/* LEFT: CONTROLS */}
@@ -190,7 +228,7 @@ export default function Predictor() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Rank/Marks Toggle */}
+                {/* Rank/Percentile Toggle */}
                 <div className={`bg-slate-100 p-1.5 rounded-xl flex relative ${examMode === 'JEE_ADVANCED' ? 'opacity-50 pointer-events-none' : ''}`}>
                   <button
                     type="button"
@@ -201,18 +239,18 @@ export default function Predictor() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setSearchMode('marks')}
-                    className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 z-10 ${searchMode === 'marks' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
+                    onClick={() => setSearchMode('percentile')}
+                    className={`flex-1 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center justify-center gap-2 z-10 ${searchMode === 'percentile' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500'}`}
                   >
-                    <Calculator size={16} /> Marks
+                    <TrendingUp size={16} /> Percentile
                   </button>
                 </div>
-                {examMode === 'JEE_ADVANCED' && <p className="text-xs text-center text-slate-400 -mt-3">Marks prediction unavailable for Advanced</p>}
+                {examMode === 'JEE_ADVANCED' && <p className="text-xs text-center text-slate-400 -mt-3">Percentile is available only for Mains</p>}
 
                 {/* Input */}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">
-                    {searchMode === 'rank' ? `${examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} Rank` : 'Mains Marks'}
+                    {searchMode === 'rank' ? `${examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} Rank` : 'JEE Mains Percentile'}
                   </label>
                   <input
                     type="number"
@@ -220,7 +258,10 @@ export default function Predictor() {
                     value={form[searchMode]}
                     onChange={handleChange}
                     required
-                    placeholder="e.g. 15000"
+                    step={searchMode === 'percentile' ? '0.0000001' : undefined}
+                    min={searchMode === 'percentile' ? '0' : undefined}
+                    max={searchMode === 'percentile' ? '100' : undefined}
+                    placeholder={searchMode === 'percentile' ? 'e.g. 95.5' : 'e.g. 15000'}
                     className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-slate-900"
                   />
                 </div>
@@ -309,10 +350,17 @@ export default function Predictor() {
           {/* RIGHT: RESULTS */}
           <div className="lg:col-span-9 h-[calc(100vh-10rem)] overflow-y-auto px-6 xl:px-8">
             {!results ? (
-              <div className="h-full flex flex-col items-center justify-center text-slate-400 min-h-[500px] border-2 border-dashed border-slate-200 rounded-3xl bg-white/50">
-                <Search size={48} className="mb-4 opacity-20" />
-                <h3 className="text-lg font-bold">No Search Yet</h3>
-                <p>Select {examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} mode to start.</p>
+              <div className="h-full flex flex-col items-center justify-center text-slate-400 min-h-[500px] border-2 border-dashed border-slate-200 rounded-3xl bg-white/50 px-6">
+                <img src="/logos/josaa.png" alt="JOSAA Counselling" className="h-12 w-auto mb-4" />
+                <h3 className="text-lg font-bold text-slate-700">Percentile to College & Rank</h3>
+                <p className="text-sm text-slate-500 mt-1 text-center">Estimate your JOSAA chances for IITs, NITs, IIITs, and GFTIs.</p>
+                <div className="mt-6 flex items-center gap-4 opacity-80">
+                  <img src="/logos/alliits.jpg" alt="IIT" className="h-20 w-auto" />
+                  <img src="/logos/allnits.jpg" alt="NIT" className="h-20 w-auto" />
+                  {/* <img src="/logos/iiitd.png" alt="IIIT" className="h-20 w-auto" /> */}
+                  <img src="/logos/iiith.jpg" alt="IIIT" className="h-20 w-auto" />
+                </div>
+                <p className="text-xs text-slate-400 mt-4">Select {examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} mode to start.</p>
               </div>
             ) : (
               <div className="space-y-6">
@@ -444,6 +492,12 @@ export default function Predictor() {
           </div>
         </div>
       </div>
+      <footer className="border-t border-slate-200 bg-white py-10">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
+          <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends till the last round 5. Official counselling results may differ. Always verify with official counselling portals.</p>
+        </div>
+      </footer>
     </div>
   );
 }

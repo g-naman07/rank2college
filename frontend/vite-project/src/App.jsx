@@ -5,6 +5,7 @@ import { ModalProvider, useModal } from './context/ModalContext';
 // Components
 import Navbar from './components/Navbar';
 import CounsellingSelector from './components/CounsellingSelector';
+import Chatbox from './components/Chatbox'
 
 // Pages
 import Home from './pages/Home';
@@ -29,12 +30,14 @@ function App() {
       <GlobalModal /> 
       
       <Routes>
+
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<Aboutus />} />
         <Route path="/josaa/predict" element={<Predictor />} />
         <Route path="/jac/predict" element={<JacPredictor />} />
         <Route path="/percentile2rank" element={<PercentileToRank />} />
       </Routes>
+      <Chatbox />
 
     </ModalProvider>
   );

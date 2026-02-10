@@ -12,14 +12,22 @@ export default function Navbar() {
 
         {/* 1. LEFT PILL: LOGO */}
         <Link
-          to="/"
-          className="bg-slate-900 text-white rounded-full p-1.5 pr-6 flex items-center gap-3 shadow-xl hover:scale-105 transition-transform"
-        >
-          <div className="bg-indigo-500 rounded-full p-2 text-white">
-            <GraduationCap size={20} />
-          </div>
-          <span className="font-bold tracking-wide text-sm hidden sm:block">Rank2College</span>
-        </Link>
+  to="/"
+  className="group flex items-center bg-white border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px] transition-all"
+>
+  {/* Icon Box - No rounding, solid background */}
+  <div className="bg-slate-900 p-3 text-white transition-colors group-hover:bg-emerald-600">
+    <GraduationCap size={24} />
+  </div>
+
+  {/* Text Box - Straight edges, Bold Uppercase */}
+  <div className="px-4 flex flex-col justify-center">
+    <span className="text-slate-900 font-black text-xl tracking-tighter uppercase leading-none">
+      RANK<span className="text-emerald-600">  2  </span>COLLEGE
+    </span>
+    <div className="h-[2px] w-full bg-slate-100 mt-1 group-hover:bg-emerald-100 transition-colors"></div>
+  </div>
+</Link>
 
         {/* 2. CENTER PILL: LINKS */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
