@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, TrendingUp, Database, Zap } from 'lucide-react'
 import { useModal } from '../context/ModalContext' // Import Global Context
-import Seo from '../components/Seo'
+
 import Aboutus from './About'
 
 // 👇 1. IMPORT THE NEW CAROUSEL COMPONENT
@@ -34,12 +34,6 @@ export default function Home() {
   const { percentile, rank } = getMetrics(marks)
 
   return (
-    <>
-      <Seo
-        title="JEE Main College Predictor 2026 – Percentile to Rank & College Tool"
-        description="Predict IIT, NIT, IIIT and JAC colleges using your JEE Main 2026 percentile. Accurate rank estimation and cutoff-based college prediction."
-        canonical="https://jee2026-predictor.vercel.app/"
-      />
       <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
 
         {/* 2. HERO SECTION */}
@@ -272,6 +266,6 @@ export default function Home() {
         </div>
       </footer> */}
       </div>
-    </>
+    
   )
 }
