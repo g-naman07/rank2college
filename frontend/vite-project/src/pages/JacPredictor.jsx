@@ -66,10 +66,9 @@ export default function JacPredictor() {
           <p className="text-slate-600">JAC Delhi predictor for DTU, NSUT, IIIT-Delhi, and IGDTUW.</p>
         </div>
 
-        {/* 👇 CHANGED: Grid gap matched to JOSAA */}
         <div className="grid lg:grid-cols-12 gap-8">
 
-          {/* LEFT: FORM - 👇 CHANGED: Added h-[calc...] and sticky */}
+          {/* LEFT: FORM */}
           <div className="lg:col-span-3 h-[calc(100vh-10rem)] overflow-y-auto pr-2">
             <div className="bg-white p-6 rounded-3xl shadow-xl shadow-orange-100/50 border border-orange-100 sticky top-28">
               <form onSubmit={handleSubmit} className="space-y-6">
@@ -149,7 +148,7 @@ export default function JacPredictor() {
             </div>
           </div>
 
-          {/* RIGHT: RESULTS - 👇 CHANGED: Added h-[calc...] scroll container */}
+          {/* RIGHT: RESULTS */}
           <div className="lg:col-span-9 h-[calc(100vh-10rem)] overflow-y-auto px-6 xl:px-8">
             
             {/* Empty State */}
@@ -172,15 +171,16 @@ export default function JacPredictor() {
                 {results.data.slice(0, visibleCount).map((college) => (
                   <div
                     key={college.id}
-                    className="group relative bg-white rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all shadow-sm hover:shadow-lg mb-4 overflow-hidden"
+                    className="group relative bg-white rounded-2xl border border-slate-200 hover:border-orange-400 transition-all shadow-sm hover:shadow-lg mb-4 overflow-hidden"
                   >
-                    {/* Left Accent Bar */}
-                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-indigo-500 via-amber-500 to-emerald-500"></div>
+                    {/* 👇 CHANGED: Solid orange accent bar instead of rainbow */}
+                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-orange-500"></div>
 
                     <div className="p-6 pl-8 flex justify-between gap-6">
                       {/* LEFT CONTENT */}
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-indigo-700 group-hover:text-indigo-800 transition-colors">
+                        {/* 👇 CHANGED: Indigo text to Orange text for college name */}
+                        <h3 className="text-lg font-bold text-orange-700 group-hover:text-orange-800 transition-colors">
                           {college.institute}
                         </h3>
 
@@ -190,11 +190,12 @@ export default function JacPredictor() {
 
                         {/* TAGS */}
                         <div className="flex flex-wrap gap-2 mt-4">
-                          <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                          {/* 👇 CHANGED: Tag colors adjusted to fit the theme better */}
+                          <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-orange-50 text-orange-700 border border-orange-100">
                             {college.quota === 'HS' ? 'Delhi Region' : 'Outside Delhi'}
                           </span>
 
-                          <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                          <span className="px-2.5 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
                             {college.category}
                           </span>
 
@@ -208,11 +209,12 @@ export default function JacPredictor() {
 
                       {/* RIGHT – RANK BOX */}
                       <div className="min-w-[160px] text-right">
-                        <div className="rounded-xl bg-gradient-to-br from-indigo-50 to-indigo-100 border border-indigo-200 px-4 py-3">
-                          <p className="text-[10px] uppercase font-bold text-indigo-500 tracking-wider">
+                        {/* 👇 CHANGED: Rank box from indigo to orange */}
+                        <div className="rounded-xl bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 px-4 py-3">
+                          <p className="text-[10px] uppercase font-bold text-orange-500 tracking-wider">
                             Closing Rank
                           </p>
-                          <p className="text-2xl font-black text-indigo-700">
+                          <p className="text-2xl font-black text-orange-700">
                             #{college.closingRank}
                           </p>
                         </div>
@@ -238,10 +240,6 @@ export default function JacPredictor() {
         </div>
       </div>
       
-      {/* Footer is now outside the scroll area if you want it at the bottom, 
-          or it scrolls with the whole page. Because we used overflow-hidden on the wrapper, 
-          you might want to remove the footer from this specific layout to keep it completely app-like, 
-          but I've left it as is! */}
     </div>
   );
 }
