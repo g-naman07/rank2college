@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom'; // REMOVED 'BrowserRouter' from imports
-import { ModalProvider, useModal } from './context/ModalContext'; 
+import { ModalProvider, useModal } from './context/ModalContext';
 
 // Components
 import Navbar from './components/Navbar';
@@ -13,6 +13,8 @@ import Predictor from './pages/Predictor';
 import JacPredictor from './pages/JacPredictor';
 import PercentileToRank from './pages/PercentileToRank';
 import Aboutus from './pages/About'
+import { Analytics } from '@vercel/analytics/react'
+
 // Helper to render the Modal globally
 const GlobalModal = () => {
   const { isModalOpen, closeModal } = useModal();
@@ -22,13 +24,12 @@ const GlobalModal = () => {
 function App() {
   return (
     // 1. ModalProvider wraps everything
-    <ModalProvider> 
-      
+    <ModalProvider>
       {/* 2. Navbar is now a direct child (The Router is in main.jsx, so Links will still work!) */}
       <Navbar />
-      
-      <GlobalModal /> 
-      
+
+      <GlobalModal />
+
       <Routes>
 
         <Route path="/" element={<Home />} />
@@ -39,6 +40,7 @@ function App() {
       </Routes>
       <Chatbox />
 
+      <Analytics />
     </ModalProvider>
   );
 }

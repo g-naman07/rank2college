@@ -12,6 +12,7 @@
   "dependencies": {
     "@motionone/utils": "^10.18.0",
     "@tailwindcss/postcss": "^4.1.18",
+    "@vercel/analytics": "^1.6.1",
     "framer-motion": "^12.34.0",
     "lucide-react": "^0.563.0",
     "postcss": "^8.5.6",
