@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jee2026-predictor.vercel.app/sitemap.xml

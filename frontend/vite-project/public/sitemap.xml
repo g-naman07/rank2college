@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://jee2026-predictor.vercel.app/</loc>
+  </url>
+
+  <url>
+    <loc>https://jee2026-predictor.vercel.app/about</loc>
+  </url>
+
+  <url>
+    <loc>https://jee2026-predictor.vercel.app/josaa/predict</loc>
+  </url>
+
+  <url>
+    <loc>https://jee2026-predictor.vercel.app/jac/predict</loc>
+  </url>
+
+  <url>
+    <loc>https://jee2026-predictor.vercel.app/percentile2rank</loc>
+  </url>
+
+</urlset>

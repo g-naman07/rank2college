@@ -14,7 +14,7 @@ import JacPredictor from './pages/JacPredictor';
 import PercentileToRank from './pages/PercentileToRank';
 import Aboutus from './pages/About'
 import { Analytics } from '@vercel/analytics/react'
-
+import { SpeedInsights } from "@vercel/speed-insights/react"
 // Helper to render the Modal globally
 const GlobalModal = () => {
   const { isModalOpen, closeModal } = useModal();
@@ -41,6 +41,7 @@ function App() {
       <Chatbox />
 
       <Analytics />
+      <SpeedInsights />
     </ModalProvider>
   );
 }
