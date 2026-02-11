@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Send, Bot, X, MessageSquare } from 'lucide-react';
+// 1. Import ReactMarkdown
+import ReactMarkdown from 'react-markdown';
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -61,16 +63,29 @@ export default function Chatbot() {
                 <p className="text-slate-400 text-[10px] mt-1">Ask about cutoffs, colleges, or trends.</p>
               </div>
             )}
+            
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`max-w-[85%] p-3 text-sm font-bold border-2 ${
+                // Removed 'font-bold' from the base class so 'strong' tags actually look different
+                className={`max-w-[85%] p-3 text-sm border-2 font-medium ${
                   m.role === 'user'
-                    ? 'bg-emerald-600 border-slate-900 text-slate-950 ml-auto'
+                    ? 'bg-emerald-600 border-slate-900 text-slate-950 ml-auto font-bold'
                     : 'bg-white border-slate-900 text-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]'
                 }`}
               >
-                {m.text}
+                {/* 2. Wrap the text in ReactMarkdown and style the elements */}
+                <ReactMarkdown
+                  components={{
+                    strong: ({node, ...props}) => <span className="font-black text-slate-950" {...props} />,
+                    p: ({node, ...props}) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
+                    ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2 space-y-1" {...props} />,
+                    ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2 space-y-1" {...props} />,
+                    li: ({node, ...props}) => <li className="pl-1" {...props} />
+                  }}
+                >
+                  {m.text}
+                </ReactMarkdown>
               </div>
             ))}
           </div>
