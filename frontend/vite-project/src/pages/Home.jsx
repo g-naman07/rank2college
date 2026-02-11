@@ -33,7 +33,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-100 selection:text-indigo-900">
-      
+
       {/* 2. HERO SECTION */}
       <section className="relative pt-36 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none"></div>
@@ -61,16 +61,19 @@ export default function Home() {
               </h1>
 
               <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
-                 Use our percentile-first tools to estimate rank ranges and your best-fit colleges across JOSAA and JAC.
+                Use our percentile-first tools to estimate rank ranges and your best-fit colleges across JOSAA and JAC.
               </p>
 
-              <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
-                <img src="/logos/alliits.jpg" alt="JOSAA Counselling" className="h-20 w-auto" />
-                <img src="/logos/allnits.jpg" alt="JOSAA Counselling" className="h-20 w-auto" />
-                <div className="h-6 w-px bg-slate-200"></div>
-                <img src="/logos/jac.png" alt="JAC Delhi Counselling" className="h-20 w-auto" />
+              <div className="flex items-center justify-center lg:justify-start gap-0 mb-8">
+                <img src="/logos/alliits.jpg" alt="JOSAA Counselling" className="h-15 w-auto" />
+                <img src="/logos/allnits.jpg" alt="JOSAA Counselling" className="h-15 w-auto" />
+                {/* <div className="h-6 w-px bg-slate-200"></div> */}
+                <img src="/logos/dtu.png" alt="JAC Delhi Counselling" className="h-14 w-auto" />
+                <img src="/logos/igdtuw.png" alt="JAC Delhi Counselling" className="h-14 w-auto" />
+                <img src="/logos/nsut.png" alt="JAC Delhi Counselling" className="h-14 w-auto" />
+                <img src="/logos/iiitd.png" alt="JAC Delhi Counselling" className="h-12 w-auto" />
               </div>
-              
+
 
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                 {/* HERO BUTTON: Uses openModal */}
@@ -80,52 +83,52 @@ export default function Home() {
                 >
                   Start Predictor <ArrowRight size={20} />
                 </button>
-                  
+
                 <Link to="/percentile2rank" className="bg-white text-slate-700 px-8 py-4 rounded-full font-bold hover:bg-slate-50 transition-all border border-slate-200 shadow-sm flex items-center gap-2 hover:text-indigo-600">
                   <TrendingUp size={18} /> PERCENTILE TOOL
                 </Link>
               </div>
               <br />
-             <div className="flex flex-wrap gap-4">
-  {/* 100% FREE - Green Theme */}
-  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-emerald-100 shadow-sm text-xs font-medium text-emerald-700">
-    <span className="relative flex h-2 w-2">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-    </span>
-    100% FREE
-  </div>
+              <div className="flex flex-wrap gap-4">
+                {/* 100% FREE - Green Theme */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-emerald-100 shadow-sm text-xs font-medium text-emerald-700">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  100% FREE
+                </div>
 
-  {/* ACCURATE - Amber/Gold Theme */}
-  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-amber-100 shadow-sm text-xs font-medium text-amber-700">
-    <span className="relative flex h-2 w-2">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-    </span>
-    ACCURATE
-  </div>
+                {/* ACCURATE - Amber/Gold Theme */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-amber-100 shadow-sm text-xs font-medium text-amber-700">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                  </span>
+                  ACCURATE
+                </div>
 
-  {/* NO SIGNIN - Indigo Theme (Original) */}
-  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600">
-    <span className="relative flex h-2 w-2">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-      <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-    </span>
-    NO LOGIN REQUIRED
-  </div>
+                {/* NO SIGNIN - Indigo Theme (Original) */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                  </span>
+                  NO LOGIN REQUIRED
+                </div>
 
-  {/* NO ADS - Rose/Red Theme */}
-  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-rose-100 shadow-sm text-xs font-medium text-rose-700">
-    <span className="relative flex h-2 w-2">
-      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-      <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-    </span>
-    NO ADS
-  </div>
-</div>
+                {/* NO ADS - Rose/Red Theme */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-rose-100 shadow-sm text-xs font-medium text-rose-700">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+                  </span>
+                  NO ADS
+                </div>
+              </div>
             </div>
-            
-            
+
+
             {/* Glass Card Estimator */}
             <div className="flex-1 w-full max-w-md">
               <div className="glass-card p-8 rounded-3xl relative overflow-hidden">
@@ -162,13 +165,13 @@ export default function Home() {
                     <span>300</span>
                   </div>
                 </div>
-<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600 mb-6">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                </span>
-                Updated for 2026 Batch
-              </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-600 mb-6">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                  </span>
+                  Updated for 2026 Batch
+                </div>
                 {/* CARD BUTTON: Uses openModal */}
                 <button
                   onClick={openModal}
@@ -205,64 +208,64 @@ export default function Home() {
       </section>
 
       {/* 5. FEATURES */}
-              <section className="py-28 relative bg-gradient-to-b from-slate-50 to-white">
-  <div className="container mx-auto px-4">
-    
-    {/* Header */}
-    <div className="text-center mb-20 max-w-2xl mx-auto">
-      <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-900 tracking-tight">
-        Everything You Need to Decide Smarter
-      </h2>
-      <p className="text-slate-600 text-lg">
-        Data-driven insights built for serious engineering aspirants
-      </p>
-    </div>
+      <section className="py-28 relative bg-gradient-to-b from-slate-50 to-white">
+        <div className="container mx-auto px-4">
 
-    {/* Features */}
-    <div className="grid md:grid-cols-3 gap-8">
-      {[
-        {
-          icon: <TrendingUp size={26} />,
-          title: "Cutoff Trend Analysis",
-          desc: "Year-wise cutoff trends that help you identify safe, moderate, and ambitious college choices."
-        },
-        {
-          icon: <Database size={26} />,
-          title: "Category-Wise Precision",
-          desc: "Carefully tuned logic for OBC, SC, ST & EWS ranks—no generic assumptions."
-        },
-        {
-          icon: <Zap size={26} />,
-          title: "Instant Results Engine",
-          desc: "Blazing-fast search with zero waiting. Adjust inputs and see results instantly."
-        }
-      ].map((f, i) => (
-        <div
-          key={i}
-          className="group bg-white p-8 rounded-2xl border border-slate-200
+          {/* Header */}
+          <div className="text-center mb-20 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 text-slate-900 tracking-tight">
+              Everything You Need to Decide Smarter
+            </h2>
+            <p className="text-slate-600 text-lg">
+              Data-driven insights built for serious engineering aspirants
+            </p>
+          </div>
+
+          {/* Features */}
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <TrendingUp size={26} />,
+                title: "Cutoff Trend Analysis",
+                desc: "Year-wise cutoff trends that help you identify safe, moderate, and ambitious college choices."
+              },
+              {
+                icon: <Database size={26} />,
+                title: "Category-Wise Precision",
+                desc: "Carefully tuned logic for OBC, SC, ST & EWS ranks—no generic assumptions."
+              },
+              {
+                icon: <Zap size={26} />,
+                title: "Instant Results Engine",
+                desc: "Blazing-fast search with zero waiting. Adjust inputs and see results instantly."
+              }
+            ].map((f, i) => (
+              <div
+                key={i}
+                className="group bg-white p-8 rounded-2xl border border-slate-200
                      shadow-sm hover:shadow-xl hover:-translate-y-1
                      transition-all duration-300"
-        >
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br
+              >
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br
                           from-indigo-500 to-indigo-600
                           flex items-center justify-center
                           text-white mb-6
                           group-hover:scale-110 transition-transform">
-            {f.icon}
+                  {f.icon}
+                </div>
+
+                <h3 className="text-xl font-bold text-slate-900 mb-3">
+                  {f.title}
+                </h3>
+
+                <p className="text-slate-600 leading-relaxed">
+                  {f.desc}
+                </p>
+              </div>
+            ))}
           </div>
-
-          <h3 className="text-xl font-bold text-slate-900 mb-3">
-            {f.title}
-          </h3>
-
-          <p className="text-slate-600 leading-relaxed">
-            {f.desc}
-          </p>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
 
 
@@ -272,7 +275,7 @@ export default function Home() {
           <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
           <br />
           <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends. Official counselling results may differ. Always verify with official counselling portals.</p>
-           <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
+          <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
         </div>
       </footer>
     </div>

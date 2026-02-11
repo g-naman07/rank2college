@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Send, Bot, X, MessageSquare } from 'lucide-react';
+import { Send, BrainCircuit, X, MessageSquare } from 'lucide-react';
 // 1. Import ReactMarkdown
 import ReactMarkdown from 'react-markdown';
+
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
@@ -32,26 +33,41 @@ export default function Chatbot() {
       {/* Floating Toggle Button - Squared & Bold */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 bg-emerald-600 text-slate-950 p-4 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(15,23,42,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all z-50"
+        className="fixed bottom-6 right-6 z-50 focus:outline-none"
       >
-        {open ? <X size={28} strokeWidth={3} /> : <MessageSquare size={28} strokeWidth={3} />}
+        {open ? (
+          <X size={28} strokeWidth={3} className="text-slate-900" />
+        ) : (
+          <img
+            src="/logos/chat.png"
+            alt="Chat Logo"
+            className="h-12 w-12 object-contain cursor-pointer transition-transform duration-300 hover:scale-110"
+          />
+        )}
       </button>
+
 
       {/* Chat Window - Hard Edges */}
       {open && (
-        <div className="fixed bottom-24 right-6 w-[350px] h-[500px] bg-white border-2 border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] flex flex-col z-50">
-          
+        <div className="fixed bottom-24 right-6 w-[350px] h-[500px] bg-yellow border-2 border-slate-900 shadow-[8px_8px_0px_0px_rgba(15,23,42,1)] flex flex-col z-50">
+
           {/* Header - Industrial Style */}
           <div className="p-4 bg-slate-900 text-white flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-emerald-500 p-1.5 border border-white">
-                <Bot size={18} className="text-slate-950" />
+                <img
+                  src="/logos/chat.png"
+                  alt="College AI Logo"
+                  className="h-6 w-6 object-contain"
+                />
               </div>
+
+
               <span className="font-black uppercase tracking-tighter text-sm">College AI Terminal</span>
             </div>
             <div className="flex items-center gap-2">
-               <span className="h-2 w-2 bg-emerald-500 animate-pulse"></span>
-               <span className="text-[10px] font-bold text-emerald-500 uppercase">Online</span>
+              <span className="h-2 w-2 bg-emerald-500 animate-pulse"></span>
+              <span className="text-[10px] font-bold text-emerald-500 uppercase">Online</span>
             </div>
           </div>
 
@@ -63,25 +79,24 @@ export default function Chatbot() {
                 <p className="text-slate-400 text-[10px] mt-1">Ask about cutoffs, colleges, or trends.</p>
               </div>
             )}
-            
+
             {messages.map((m, i) => (
               <div
                 key={i}
                 // Removed 'font-bold' from the base class so 'strong' tags actually look different
-                className={`max-w-[85%] p-3 text-sm border-2 font-medium ${
-                  m.role === 'user'
-                    ? 'bg-emerald-600 border-slate-900 text-slate-950 ml-auto font-bold'
-                    : 'bg-white border-slate-900 text-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]'
-                }`}
+                className={`max-w-[85%] p-3 text-sm border-2 font-medium ${m.role === 'user'
+                  ? 'bg-emerald-600 border-slate-900 text-slate-950 ml-auto font-bold'
+                  : 'bg-white border-slate-900 text-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,1)]'
+                  }`}
               >
                 {/* 2. Wrap the text in ReactMarkdown and style the elements */}
                 <ReactMarkdown
                   components={{
-                    strong: ({node, ...props}) => <span className="font-black text-slate-950" {...props} />,
-                    p: ({node, ...props}) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
-                    ul: ({node, ...props}) => <ul className="list-disc ml-4 mb-2 space-y-1" {...props} />,
-                    ol: ({node, ...props}) => <ol className="list-decimal ml-4 mb-2 space-y-1" {...props} />,
-                    li: ({node, ...props}) => <li className="pl-1" {...props} />
+                    strong: ({ node, ...props }) => <span className="font-black text-slate-950" {...props} />,
+                    p: ({ node, ...props }) => <p className="mb-2 last:mb-0 leading-relaxed" {...props} />,
+                    ul: ({ node, ...props }) => <ul className="list-disc ml-4 mb-2 space-y-1" {...props} />,
+                    ol: ({ node, ...props }) => <ol className="list-decimal ml-4 mb-2 space-y-1" {...props} />,
+                    li: ({ node, ...props }) => <li className="pl-1" {...props} />
                   }}
                 >
                   {m.text}
@@ -96,11 +111,11 @@ export default function Chatbot() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && sendMessage()}
-              placeholder="ENTER COMMAND..."
+              placeholder="Enter your details"
               className="flex-1 bg-white border-2 border-slate-900 border-r-0 px-3 py-2 text-xs font-bold uppercase placeholder:text-slate-400 focus:outline-none focus:bg-emerald-50"
             />
-            <button 
-              onClick={sendMessage} 
+            <button
+              onClick={sendMessage}
               className="bg-slate-900 text-emerald-500 px-4 border-2 border-slate-900 hover:bg-emerald-600 hover:text-slate-950 transition-colors"
             >
               <Send size={18} strokeWidth={3} />
