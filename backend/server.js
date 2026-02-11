@@ -19,7 +19,9 @@ app.use(morgan('dev'));
 // 3. MOUNT ROUTES
 app.use('/api', collegeRoutes);
 app.use('/api/chat',chatbot );
-
+app.get('/api/health',(req,res)=>{
+    res.status(200).send('API is awake and healthy');
+})
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
