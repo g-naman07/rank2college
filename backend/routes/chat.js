@@ -1,41 +1,34 @@
 const express = require('express');
 const router = express.Router();
-const OpenAI = require('openai');
+const { GoogleGenAI } = require('@google/genai');
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize Gemini
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 router.post('/', async (req, res) => {
   try {
     const { message } = req.body;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: `
-You are a JEE counselling assistant.
-You help students with:
-- JEE Main & Advanced counselling
-- JoSAA & JAC rules
-- Category, quota, gender eligibility
-Be concise, accurate, and student-friendly.
-`
-        },
-        { role: "user", content: message }
-      ],
+    // Call Gemini Model
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: message,
+      config: {
+        systemInstruction: `You are a JEE counselling assistant. 
+        You help students with JEE Main & Advanced counselling, JoSAA & JAC rules. 
+        Be concise, accurate, and student-friendly.
+        IMPORTANT: Do NOT use any Markdown formatting. Do not use asterisks (**) for bolding or bullet points. Provide plain text only.`,
+      }
     });
 
     res.json({
       success: true,
-      reply: completion.choices[0].message.content
+      reply: response.text
     });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false });
+    console.error("Gemini Error:", err);
+    res.status(500).json({ success: false, message: "AI is currently sleeping." });
   }
 });
 

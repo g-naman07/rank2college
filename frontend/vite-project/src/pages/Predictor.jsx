@@ -17,26 +17,25 @@ export default function Predictor() {
     branchSearch: ''
   });
 
-  // State for Exam Mode
-  const [examMode, setExamMode] = useState('JEE_MAINS'); // 'JEE_MAINS' or 'JEE_ADVANCED'
+  const [examMode, setExamMode] = useState('JEE_MAINS'); 
   const [searchMode, setSearchMode] = useState('percentile');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
+  
+  // 👇 ADDED VISIBLE COUNT STATE
+  const [visibleCount, setVisibleCount] = useState(6);
 
   const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
-  // --- EFFECT: Handle Exam Mode Switching ---
   useEffect(() => {
     if (examMode === 'JEE_ADVANCED') {
-      // If Advanced: Force Rank Mode (no percentile mode) & Reset Institute
       setSearchMode('rank');
-      setForm(prev => ({ ...prev, instituteType: 'IIT', quota: 'AI' })); // IITs are usually All India
+      setForm(prev => ({ ...prev, instituteType: 'IIT', quota: 'AI' }));
     } else {
-      // If Mains: Reset to default
       setSearchMode('percentile');
       setForm(prev => ({ ...prev, instituteType: '' }));
     }
-    setResults(null); // Clear old results
+    setResults(null); 
   }, [examMode]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -68,8 +67,9 @@ export default function Predictor() {
     e.preventDefault();
     setLoading(true);
     setResults(null);
+    // 👇 RESET VISIBLE COUNT ON NEW SEARCH
+    setVisibleCount(6);
 
-    // 1. SANITIZATION LOGIC
     const cleanCategory = form.category === 'All Categories' ? undefined : form.category;
     const cleanQuota = form.quota === 'All Quotas' ? undefined : form.quota;
     const cleanGender = form.gender === 'All Genders' ? undefined : form.gender;
@@ -78,20 +78,15 @@ export default function Predictor() {
     try {
       const rankInfo = await resolveRankForRequest();
 
-      // 2. BUILD CLEAN PAYLOAD
       const payload = {
         examMode,
         counselling: 'JOSAA',
-
         ...(cleanCategory && { category: cleanCategory }),
         ...(cleanQuota && { quota: cleanQuota }),
         ...(cleanGender && { gender: cleanGender }),
         ...(cleanInstitute && { instituteType: cleanInstitute }),
-
         rank: rankInfo.rank,
       };
-
-      console.log("🚀 Sending Payload:", payload);
 
       const res = await fetch(`${apiBase}/predict`, {
         method: 'POST',
@@ -152,12 +147,9 @@ export default function Predictor() {
     }
   };
 
-
-  // --- CLIENT FILTERING ---
   const filteredData = useMemo(() => {
     if (!results?.data) return [];
     return results.data.filter(college => {
-      // Institute Type Filter
       if (form.instituteType) {
         const name = college.institute;
         const type = form.instituteType;
@@ -167,7 +159,6 @@ export default function Predictor() {
         else if (type === 'IIIT') match = name.includes('Indian Institute of Information Technology');
         if (!match) return false;
       }
-      // Branch Filter
       if (form.branchSearch) {
         if (!college.program.toLowerCase().includes(form.branchSearch.toLowerCase())) {
           return false;
@@ -189,7 +180,6 @@ export default function Predictor() {
   return (
     <div className="min-h-screen bg-slate-50 overflow-hidden text-slate-900 relative selection:bg-indigo-100 selection:text-indigo-900">
 
-      {/* Backgrounds */}
       <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none fixed"></div>
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-200/40 rounded-full mix-blend-multiply filter blur-[96px] opacity-70 animate-blob pointer-events-none fixed"></div>
 
@@ -197,7 +187,6 @@ export default function Predictor() {
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-3 mb-4">
             <img src="/logos/josaa.png" alt="JOSAA Counselling" className="h-10 w-auto" />
-            {/* <img src="/logos/alliits.jpg" alt="JOSAA Counselling" className="h-10 w-auto" /> */}
           </div>
           <h1 className="text-4xl font-extrabold text-slate-900 mb-3">Percentile to College & Rank</h1>
           <p className="text-slate-600">JOSAA predictor for IITs, NITs, IIITs, and GFTIs.</p>
@@ -208,7 +197,6 @@ export default function Predictor() {
           <div className="lg:col-span-3 h-[calc(100vh-10rem)] overflow-y-auto pr-2">
             <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6 sticky top-28">
 
-              {/* EXAM TOGGLE */}
               <div className="mb-6">
                 <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Select Exam</label>
                 <div className="flex bg-slate-100 p-1 rounded-xl">
@@ -228,7 +216,6 @@ export default function Predictor() {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-5">
-                {/* Rank/Percentile Toggle */}
                 <div className={`bg-slate-100 p-1.5 rounded-xl flex relative ${examMode === 'JEE_ADVANCED' ? 'opacity-50 pointer-events-none' : ''}`}>
                   <button
                     type="button"
@@ -247,7 +234,6 @@ export default function Predictor() {
                 </div>
                 {examMode === 'JEE_ADVANCED' && <p className="text-xs text-center text-slate-400 -mt-3">Percentile is available only for Mains</p>}
 
-                {/* Input */}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">
                     {searchMode === 'rank' ? `${examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} Rank` : 'JEE Mains Percentile'}
@@ -265,7 +251,7 @@ export default function Predictor() {
                     className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-slate-900"
                   />
                 </div>
-                {/* Gender */}
+                
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">
                     Gender
@@ -283,7 +269,6 @@ export default function Predictor() {
                   </select>
                 </div>
 
-                {/* Dropdowns */}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-bold text-slate-700 mb-2">Category</label>
@@ -299,7 +284,6 @@ export default function Predictor() {
                   </div>
                 </div>
 
-                {/* Institute Type */}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">Institute Type</label>
                   <select
@@ -323,7 +307,6 @@ export default function Predictor() {
                   </select>
                 </div>
 
-                {/* Branch */}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">Preferred Branch</label>
                   <input
@@ -357,7 +340,6 @@ export default function Predictor() {
                 <div className="mt-6 flex items-center gap-4 opacity-80">
                   <img src="/logos/alliits.jpg" alt="IIT" className="h-20 w-auto" />
                   <img src="/logos/allnits.jpg" alt="NIT" className="h-20 w-auto" />
-                  {/* <img src="/logos/iiitd.png" alt="IIIT" className="h-20 w-auto" /> */}
                   <img src="/logos/iiith.jpg" alt="IIIT" className="h-20 w-auto" />
                 </div>
                 <p className="text-xs text-slate-400 mt-4">Select {examMode === 'JEE_ADVANCED' ? 'Advanced' : 'Mains'} mode to start.</p>
@@ -365,7 +347,6 @@ export default function Predictor() {
             ) : (
               <div className="space-y-6">
 
-                {/* 1. Header with Export PDF Button */}
                 <div className="flex items-center justify-between bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                   <div>
                     <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -387,7 +368,6 @@ export default function Predictor() {
                   </button>
                 </div>
 
-                {/* 2. Predicted Rank Info (If applicable) */}
                 {results.predictedRank && (
                   <div className="flex justify-end">
                     <div className="text-right bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100 inline-block">
@@ -397,94 +377,98 @@ export default function Predictor() {
                   </div>
                 )}
 
-                {/* 3. Result Cards */}
                 <div className="grid gap-4">
                   {filteredData.length === 0 ? (
                     <div className="text-center py-10 text-slate-500">No colleges found. Try adjusting filters.</div>
                   ) : (
-                    filteredData.map((college) => {
-                      const userRank = results.predictedRank || Number(form.rank);
-                      const prob = getProbability(college.closingRank, userRank);
-                      const Icon = prob.icon;
+                    <>
+                      {/* 👇 IMPLEMENTED SLICE AND MAP */}
+                      {filteredData.slice(0, visibleCount).map((college) => {
+                        const userRank = results.predictedRank || Number(form.rank);
+                        const prob = getProbability(college.closingRank, userRank);
+                        const Icon = prob.icon;
 
-                      return (
-                        <div key={college.id} className="group relative bg-white rounded-2xl border border-slate-200 p-0 hover:border-indigo-500 transition-all shadow-sm hover:shadow-xl overflow-hidden">
-                          <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${prob.color === 'emerald' ? 'bg-emerald-500' : prob.color === 'blue' ? 'bg-blue-500' : prob.color === 'amber' ? 'bg-amber-500' : 'bg-rose-500'}`}></div>
-                          <div className="p-6 pl-8 flex flex-col md:flex-row gap-6">
-                            <div className="flex-1">
-                              <div className="flex justify-between items-start gap-4">
-                                <h4 className="font-bold text-lg text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">
-                                  {college.institute}
-                                </h4>
-                                <span className={`shrink-0 px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 ${prob.color === 'emerald' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : prob.color === 'blue' ? 'bg-blue-50 text-blue-700 border-blue-200' : prob.color === 'amber' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`}>
-                                  <Icon size={12} /> {prob.text}
-                                </span>
-                              </div>
-                              <div className="mt-3 flex items-center gap-2 text-slate-600 font-medium text-sm">
-                                <span className="p-1.5 rounded-md bg-slate-100 text-indigo-600"><BookOpen size={16} /></span>
-                                {college.program}
-                              </div>
-                              <div className="flex gap-3 mt-5">
-                                <span className="text-xs font-bold px-2 py-1 rounded border border-slate-200 text-slate-500 bg-slate-50">{college.quota}</span>
-                                <span className="text-xs font-bold px-2 py-1 rounded border border-slate-200 text-slate-500 bg-slate-50">{college.category}</span>
-                              </div>
-                            </div>
-                            <div className="flex flex-col justify-between min-w-[170px] gap-3">
-
-                              {/* Closing Rank */}
-                              <div className="text-center px-3 py-2 rounded-xl bg-indigo-50 border border-indigo-100">
-                                <p className="text-[10px] uppercase font-bold text-indigo-400 tracking-wide">
-                                  Closing Rank
-                                </p>
-                                <p className="text-2xl font-extrabold text-indigo-600 leading-tight">
-                                  #{college.closingRank}
-                                </p>
-                              </div>
-
-                              {/* Gender Badge */}
-                              {college.gender && (
-                                <div className="text-center">
-                                  <span className="inline-flex items-center text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                                    <User size={12} className="mr-1 opacity-70" />
-                                    {college.gender}
+                        return (
+                          <div key={college.id} className="group relative bg-white rounded-2xl border border-slate-200 p-0 hover:border-indigo-500 transition-all shadow-sm hover:shadow-xl overflow-hidden">
+                            <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${prob.color === 'emerald' ? 'bg-emerald-500' : prob.color === 'blue' ? 'bg-blue-500' : prob.color === 'amber' ? 'bg-amber-500' : 'bg-rose-500'}`}></div>
+                            <div className="p-6 pl-8 flex flex-col md:flex-row gap-6">
+                              <div className="flex-1">
+                                <div className="flex justify-between items-start gap-4">
+                                  <h4 className="font-bold text-lg text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">
+                                    {college.institute}
+                                  </h4>
+                                  <span className={`shrink-0 px-3 py-1 rounded-full text-xs font-bold border flex items-center gap-1.5 ${prob.color === 'emerald' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : prob.color === 'blue' ? 'bg-blue-50 text-blue-700 border-blue-200' : prob.color === 'amber' ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`}>
+                                    <Icon size={12} /> {prob.text}
                                   </span>
                                 </div>
-                              )}
-
-                              {/* Rank Probability Bar */}
-                              {userRank && (
-                                <div>
-                                  <div className="flex justify-between text-[9px] text-slate-400 mb-1">
-                                    <span>You</span>
-                                    <span>{userRank}</span>
-                                  </div>
-                                  <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                    <div
-                                      className={`h-full rounded-full ${prob.color === 'emerald'
-                                        ? 'bg-emerald-500'
-                                        : prob.color === 'blue'
-                                          ? 'bg-blue-500'
-                                          : prob.color === 'amber'
-                                            ? 'bg-amber-500'
-                                            : 'bg-rose-500'
-                                        }`}
-                                      style={{
-                                        width: `${Math.min(
-                                          100,
-                                          (userRank / college.closingRank) * 100
-                                        )}%`,
-                                      }}
-                                    ></div>
-                                  </div>
+                                <div className="mt-3 flex items-center gap-2 text-slate-600 font-medium text-sm">
+                                  <span className="p-1.5 rounded-md bg-slate-100 text-indigo-600"><BookOpen size={16} /></span>
+                                  {college.program}
                                 </div>
-                              )}
+                                <div className="flex gap-3 mt-5">
+                                  <span className="text-xs font-bold px-2 py-1 rounded border border-slate-200 text-slate-500 bg-slate-50">{college.quota}</span>
+                                  <span className="text-xs font-bold px-2 py-1 rounded border border-slate-200 text-slate-500 bg-slate-50">{college.category}</span>
+                                </div>
+                              </div>
+                              <div className="flex flex-col justify-between min-w-[170px] gap-3">
+                                <div className="text-center px-3 py-2 rounded-xl bg-indigo-50 border border-indigo-100">
+                                  <p className="text-[10px] uppercase font-bold text-indigo-400 tracking-wide">
+                                    Closing Rank
+                                  </p>
+                                  <p className="text-2xl font-extrabold text-indigo-600 leading-tight">
+                                    #{college.closingRank}
+                                  </p>
+                                </div>
+                                {college.gender && (
+                                  <div className="text-center">
+                                    <span className="inline-flex items-center text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
+                                      <User size={12} className="mr-1 opacity-70" />
+                                      {college.gender}
+                                    </span>
+                                  </div>
+                                )}
+                                {userRank && (
+                                  <div>
+                                    <div className="flex justify-between text-[9px] text-slate-400 mb-1">
+                                      <span>You</span>
+                                      <span>{userRank}</span>
+                                    </div>
+                                    <div className="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
+                                      <div
+                                        className={`h-full rounded-full ${prob.color === 'emerald'
+                                          ? 'bg-emerald-500'
+                                          : prob.color === 'blue'
+                                            ? 'bg-blue-500'
+                                            : prob.color === 'amber'
+                                              ? 'bg-amber-500'
+                                              : 'bg-rose-500'
+                                          }`}
+                                        style={{
+                                          width: `${Math.min(
+                                            100,
+                                            (userRank / college.closingRank) * 100
+                                          )}%`,
+                                        }}
+                                      ></div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             </div>
-
-
                           </div>
-                        </div>
-                      );
-                    })
+                        );
+                      })}
+
+                      {/* 👇 ADDED LOAD MORE BUTTON */}
+                      {visibleCount < filteredData.length && (
+                        <button
+                          onClick={() => setVisibleCount((prev) => prev + 6)}
+                          className="w-full mt-4 py-4 rounded-xl font-bold text-indigo-600 bg-indigo-50 border-2 border-dashed border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 transition-all flex items-center justify-center gap-2"
+                        >
+                          Load More Colleges ({filteredData.length - visibleCount} remaining)
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
