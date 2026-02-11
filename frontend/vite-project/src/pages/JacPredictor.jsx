@@ -37,7 +37,7 @@ export default function JacPredictor() {
         rank: Number(form.rank)
       };
 
-      const res = await fetch('http://localhost:5001/api/predict', {
+      const res = await fetch('https://rank2college-xy9g.onrender.com/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

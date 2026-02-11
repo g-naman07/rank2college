@@ -25,7 +25,7 @@ export default function Predictor() {
   // 👇 ADDED VISIBLE COUNT STATE
   const [visibleCount, setVisibleCount] = useState(6);
 
-  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+  const apiBase = import.meta.env.VITE_API_URL || 'https://rank2college-xy9g.onrender.com/api';
 
   useEffect(() => {
     if (examMode === 'JEE_ADVANCED') {

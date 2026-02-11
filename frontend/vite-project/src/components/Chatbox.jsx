@@ -16,7 +16,7 @@ export default function Chatbot() {
     setInput('');
 
     try {
-      const res = await fetch('http://localhost:5001/api/chat', {
+      const res = await fetch('https://rank2college-xy9g.onrender.com/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input })

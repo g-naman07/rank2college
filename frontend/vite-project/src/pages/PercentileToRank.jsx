@@ -16,7 +16,7 @@ const PercentileToRank = () => {
         setResult(null);
 
         try {
-            const response = await fetch('http://localhost:5001/api/percentile2rank', {
+            const response = await fetch('https://rank2college-xy9g.onrender.com/api/percentile2rank', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ percentile, category }),
