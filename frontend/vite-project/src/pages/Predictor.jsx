@@ -17,11 +17,11 @@ export default function Predictor() {
     branchSearch: ''
   });
 
-  const [examMode, setExamMode] = useState('JEE_MAINS'); 
+  const [examMode, setExamMode] = useState('JEE_MAINS');
   const [searchMode, setSearchMode] = useState('percentile');
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
-  
+
   // 👇 ADDED VISIBLE COUNT STATE
   const [visibleCount, setVisibleCount] = useState(6);
 
@@ -35,7 +35,7 @@ export default function Predictor() {
       setSearchMode('percentile');
       setForm(prev => ({ ...prev, instituteType: '' }));
     }
-    setResults(null); 
+    setResults(null);
   }, [examMode]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
@@ -188,7 +188,7 @@ export default function Predictor() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <img src="/logos/josaa.png" alt="JOSAA Counselling" className="h-10 w-auto" />
           </div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-3">Percentile to College & Rank</h1>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-3">JEE MAIN 2026 Percentile to College & Rank</h1>
           <p className="text-slate-600">JOSAA predictor for IITs, NITs, IIITs, and GFTIs.</p>
         </div>
         <div className="grid lg:grid-cols-12 gap-8">
@@ -251,7 +251,7 @@ export default function Predictor() {
                     className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none font-medium text-slate-900"
                   />
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">
                     Gender

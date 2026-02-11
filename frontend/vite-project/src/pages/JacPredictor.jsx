@@ -32,7 +32,7 @@ export default function JacPredictor() {
     try {
       const payload = {
         counselling: 'JAC',
-        examMode: 'JEE_MAINS', 
+        examMode: 'JEE_MAINS',
         ...form,
         rank: Number(form.rank)
       };
@@ -62,7 +62,7 @@ export default function JacPredictor() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <img src="/logos/jac.png" alt="JAC Delhi Counselling" className="h-10 w-auto" />
           </div>
-          <h1 className="text-4xl font-extrabold text-slate-900 mb-3">Percentile to College & Rank</h1>
+          <h1 className="text-4xl font-extrabold text-slate-900 mb-3">JEE MAIN 2026 Percentile to College & Rank</h1>
           <p className="text-slate-600">JAC Delhi predictor for DTU, NSUT, IIIT-Delhi, and IGDTUW.</p>
         </div>
 
@@ -108,7 +108,7 @@ export default function JacPredictor() {
                     ))}
                   </div>
                 </div>
-                
+
                 {/* Gender */}
                 <div>
                   <label className="block text-sm font-bold text-slate-700 mb-2">
@@ -150,7 +150,7 @@ export default function JacPredictor() {
 
           {/* RIGHT: RESULTS */}
           <div className="lg:col-span-9 h-[calc(100vh-10rem)] overflow-y-auto px-6 xl:px-8">
-            
+
             {/* Empty State */}
             {!results ? (
               <div className="h-full flex flex-col items-center justify-center text-slate-400 min-h-[500px] border-2 border-dashed border-orange-200 rounded-3xl bg-white/70 px-6">
@@ -239,7 +239,7 @@ export default function JacPredictor() {
 
         </div>
       </div>
-      
+
     </div>
   );
 }

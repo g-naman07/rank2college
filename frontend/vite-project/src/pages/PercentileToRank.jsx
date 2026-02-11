@@ -45,7 +45,7 @@ const PercentileToRank = () => {
             <div className="container mx-auto max-w-2xl relative z-10">
                 <div className="text-center mb-10">
                     <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
-                        Percentile to College & Rank
+                         JEE MAIN 2026 Percentile to College & Rank
                     </h1>
                     <p className="text-slate-500">Estimate your rank range first, then explore college options.</p>
                 </div>
