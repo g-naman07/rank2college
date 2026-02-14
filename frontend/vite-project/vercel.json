@@ -1,10 +1,5 @@
 {
-  "version": 2,
-  "installCommand": "cd frontend/vite-project && npm install",
-  "buildCommand": "cd frontend/vite-project && npm run build",
-  "outputDirectory": "frontend/vite-project/dist",
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
