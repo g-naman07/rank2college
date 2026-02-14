@@ -1,16 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Target, Filter, MapPin, BarChart3, 
-  GraduationCap, ArrowRight, BookOpen, 
+import {
+  Target, Filter, MapPin, BarChart3,
+  GraduationCap, ArrowRight, BookOpen,
   Trophy, Users, TrendingUp, Lightbulb,
   CheckCircle2, Compass
 } from 'lucide-react';
-
+import { useModal } from '../context/ModalContext'
 export default function About() {
+  const { openModal } = useModal();
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-100 selection:text-indigo-900 pb-20">
-      
+
       {/* 1. HERO SECTION */}
       <section className="pt-32 pb-12 bg-white border-b border-slate-200">
         <div className="container mx-auto px-4 text-center max-w-4xl">
@@ -62,7 +63,7 @@ export default function About() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            
+
             {/* 0 - 10k */}
             <div className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:border-indigo-300 transition-all relative overflow-hidden">
               <span className="absolute top-0 right-0 bg-emerald-100 text-emerald-700 px-4 py-1 rounded-bl-2xl text-xs font-bold uppercase">Top 10,000</span>
@@ -128,7 +129,7 @@ export default function About() {
       <section className="py-16 bg-white border-y border-slate-200">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-            
+
             {/* LEFT: Category Wise */}
             <div>
               <h3 className="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
@@ -189,7 +190,7 @@ export default function About() {
       <section className="py-16 bg-slate-50">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid md:grid-cols-2 gap-12">
-            
+
             {/* State Quota */}
             <div>
               <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
@@ -211,8 +212,8 @@ export default function About() {
               </div>
             </div>
 
-             {/* Branch Analysis */}
-             <div>
+            {/* Branch Analysis */}
+            <div>
               <h3 className="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
                 <Compass className="text-blue-600" /> Branch Wise Cutoffs
               </h3>
@@ -244,18 +245,24 @@ export default function About() {
               <Lightbulb className="text-yellow-300" /> Improvement Tips
             </h2>
             <div className="grid md:grid-cols-2 gap-4 text-left text-indigo-100 text-sm mb-8 max-w-2xl mx-auto">
-              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0"/> Consider Home State Quota benefits</div>
-              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0"/> Research newer NITs for better branch options</div>
-              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0"/> Be flexible with branch vs college reputation</div>
-              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0"/> Check placement stats before deciding</div>
+              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0" /> Consider Home State Quota benefits</div>
+              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0" /> Research newer NITs for better branch options</div>
+              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0" /> Be flexible with branch vs college reputation</div>
+              <div className="flex gap-2"><CheckCircle2 size={16} className="shrink-0" /> Check placement stats before deciding</div>
             </div>
 
-            <Link 
-              to="/" 
+            {/* <Link
+              to="/predict"
               className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-full font-bold hover:bg-indigo-50 transition-all shadow-lg active:scale-95"
             >
-              Start Predicting Now <ArrowRight size={20}/>
-            </Link>
+              Start Predicting Now <ArrowRight size={20} />
+            </Link> */}
+            <button
+              onClick={openModal}
+              className="bg-yellow-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-200 flex items-center gap-2 hover:-translate-y-1"
+            >
+              Start Predictor <ArrowRight size={20} />
+            </button>
           </div>
         </div>
       </section>
@@ -264,7 +271,7 @@ export default function About() {
         <div className="container mx-auto px-4 text-center">
           <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
           <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends. Official counselling results may differ. Always verify with official counselling portals.</p>
-           <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
+          <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
         </div>
       </footer>
 

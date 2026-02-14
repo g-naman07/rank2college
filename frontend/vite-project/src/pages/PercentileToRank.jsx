@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useModal } from '../context/ModalContext';
-
+import Aboutus from './About'
 const PercentileToRank = () => {
     const [percentile, setPercentile] = useState('');
     const [category, setCategory] = useState('OPEN');
@@ -45,7 +45,7 @@ const PercentileToRank = () => {
             <div className="container mx-auto max-w-2xl relative z-10">
                 <div className="text-center mb-10">
                     <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
-                         JEE MAIN 2026 Percentile to College & Rank
+                        JEE MAIN 2026 Percentile to College & Rank
                     </h1>
                     <p className="text-slate-500">Estimate your rank range first, then explore college options.</p>
                 </div>
@@ -133,31 +133,32 @@ const PercentileToRank = () => {
                     </div>
                 )}
                 {/* 👇 PLACE THE BUTTON HERE (AFTER RESULT CARD) */}
-{result && (
-  <div className="mt-6 text-center">
-    <button
-      onClick={openModal}
-      className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl
+                {result && (
+                    <div className="mt-6 text-center">
+                        <button
+                            onClick={openModal}
+                            className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl
                  bg-gradient-to-r from-indigo-600 to-purple-600
                  text-white font-bold shadow-lg shadow-indigo-200
                  hover:scale-[1.02] transition-all"
-    >
-      View Rank vs College →
-    </button>
+                        >
+                            View Rank vs College →
+                        </button>
 
-    <p className="mt-2 text-sm text-slate-500">
-      Explore colleges you can get at this rank
-    </p>
-  </div>
-)}
+                        <p className="mt-2 text-sm text-slate-500">
+                            Explore colleges you can get at this rank
+                        </p>
+                    </div>
+                )}
             </div>
-            <footer className="border-t border-slate-200 bg-white py-10 mt-14">
+            <Aboutus />
+            {/* <footer className="border-t border-slate-200 bg-white py-10 mt-14">
                 <div className="container mx-auto px-4 text-center">
                     <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
                     <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends. Official counselling results may differ. Always verify with official counselling portals.</p>
                      <p className="text-slate-500 font-medium">Not affiliated with NTA, JEE Main, or JEE Advanced. For official information, visit NTA JEE.</p>
                 </div>
-            </footer>
+            </footer> */}
         </div>
 
     );
