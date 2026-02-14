@@ -13,6 +13,8 @@ import Predictor from './pages/Predictor';
 import JacPredictor from './pages/JacPredictor';
 import PercentileToRank from './pages/PercentileToRank';
 import Aboutus from './pages/About'
+import JosaaFaq from './pages/JosaaFaq'
+import NtaPercentileLogic from './pages/NtaPercentileLogic'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from "@vercel/speed-insights/react"
 // Helper to render the Modal globally
@@ -37,6 +39,8 @@ function App() {
         <Route path="/josaa/predict" element={<Predictor />} />
         <Route path="/jac/predict" element={<JacPredictor />} />
         <Route path="/percentile2rank" element={<PercentileToRank />} />
+        <Route path="/josaa/faq" element={<JosaaFaq />} />
+        <Route path="/nta-percentile-calculation" element={<NtaPercentileLogic />} />
       </Routes>
       <Chatbox />
 

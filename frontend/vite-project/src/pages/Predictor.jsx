@@ -5,7 +5,7 @@ const CATEGORIES = ['OPEN', 'OBC-NCL', 'EWS', 'SC', 'ST'];
 const QUOTAS = ['AI', 'HS', 'OS'];
 const INSTITUTE_TYPES = ['IIT', 'NIT', 'IIIT', 'GFTI'];
 const GENDERS = ['Gender-Neutral', 'Female-only (including Supernumerary)'];
-
+import Aboutus from './About'
 export default function Predictor() {
   const [form, setForm] = useState({
     rank: '',
@@ -476,12 +476,13 @@ export default function Predictor() {
           </div>
         </div>
       </div>
-      <footer className="border-t border-slate-200 bg-white py-10">
+      {/* <footer className="border-t border-slate-200 bg-white py-10">
         <div className="container mx-auto px-4 text-center">
           <p className="text-slate-500 font-medium">© 2026 Rank2College. Built for students, by students.</p>
           <p className="text-xs text-slate-400 mt-2">Disclaimer: Predictions are estimates based on past cutoffs and trends till the last round 5. Official counselling results may differ. Always verify with official counselling portals.</p>
         </div>
-      </footer>
+      </footer> */}
+      <Aboutus />
     </div>
   );
 }

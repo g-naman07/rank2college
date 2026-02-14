@@ -36,6 +36,8 @@ export default function Navbar() {
             <Link to="/percentile2rank" className="hover:text-indigo-600 transition-colors">Percentile To Rank</Link>
             <Link to="/josaa/predict" className="hover:text-indigo-600 transition-colors">JOSAA PREDICTOR</Link>
             <Link to="/jac/predict" className="hover:text-indigo-600 transition-colors">JAC PREDICTOR</Link>
+            <Link to="/josaa/faq" className="hover:text-indigo-600 transition-colors">JOSAA FAQ</Link>
+            <Link to="/nta-percentile-calculation" className="hover:text-indigo-600 transition-colors">NTA LOGIC</Link>
 
             {/* <a href="#about" className="hover:text-indigo-600 transition-colors">About Us</a> */}
             {/* <a href="#faq" className="hover:text-indigo-600 transition-colors">FAQ</a> */}

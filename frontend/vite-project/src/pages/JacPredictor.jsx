@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Search, MapPin, Building2, User, BookOpen, Loader2 } from 'lucide-react';
 import Navbar from '../components/Navbar';
-
+import Aboutus from './About'
 // JAC Constants
 const CATEGORIES = ['OPEN', 'EWS', 'OBC-NCL', 'SC', 'ST'];
 const REGIONS = [
@@ -236,8 +236,8 @@ export default function JacPredictor() {
               </div>
             )}
           </div>
-
         </div>
+              <Aboutus />
       </div>
 
     </div>
